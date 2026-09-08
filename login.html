@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Arqam TUC Shop - Manager Login</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -56,6 +59,11 @@ input{
     border:1px solid #ddd;
     border-radius:10px;
     font-size:16px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#16733b;
 }
 
 button{
@@ -75,8 +83,21 @@ button:hover{
     background:#0f5c2d;
 }
 
+button:disabled{
+    background:#888;
+    cursor:not-allowed;
+}
+
 .error{
     color:#d62828;
+    text-align:center;
+    margin-top:15px;
+    display:none;
+    font-weight:bold;
+}
+
+.success{
+    color:#198754;
     text-align:center;
     margin-top:15px;
     display:none;
@@ -90,29 +111,60 @@ button:hover{
     color:#16733b;
     text-decoration:none;
 }
+
+.firebase-status{
+    text-align:center;
+    font-size:13px;
+    color:#777;
+    margin-top:15px;
+}
+
 </style>
+
 </head>
 
 <body>
 
 <div class="login-box">
 
-    <div class="logo">ARQAM TUC SHOP</div>
+    <div class="logo">
+        ARQAM TUC SHOP
+    </div>
 
     <div class="subtitle">
         Manager Panel Login
     </div>
 
-    <label>Username</label>
-    <input type="text" id="username" placeholder="Enter username">
+    <label>Email</label>
+
+    <input
+        type="email"
+        id="username"
+        placeholder="Enter manager email"
+        autocomplete="username"
+    >
 
     <label>Password</label>
-    <input type="password" id="password" placeholder="Enter password">
 
-    <button onclick="login()">LOGIN</button>
+    <input
+        type="password"
+        id="password"
+        placeholder="Enter password"
+        autocomplete="current-password"
+    >
 
-    <div class="error" id="error">
-        Incorrect username or password
+    <button id="loginButton">
+        LOGIN
+    </button>
+
+    <div class="error" id="error"></div>
+
+    <div class="success" id="success">
+        Login successful. Opening Manager Panel...
+    </div>
+
+    <div class="firebase-status" id="firebaseStatus">
+        Connecting to secure login...
     </div>
 
     <a href="products.html" class="back">
@@ -121,42 +173,290 @@ button:hover{
 
 </div>
 
-<script>
 
-function login(){
+<script type="module">
 
-    const username =
-        document.getElementById("username").value.trim();
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+// ========================================
+// FIREBASE CONFIG
+// ========================================
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyAHxIt-uneG3CSGk-JUPkTG2zJ2zO8ra2t5g",
+
+    authDomain:
+        "arqam-tuc-shop.firebaseapp.com",
+
+    projectId:
+        "arqam-tuc-shop",
+
+    storageBucket:
+        "arqam-tuc-shop.firebasestorage.app",
+
+    messagingSenderId:
+        "182232116266",
+
+    appId:
+        "1:182232116266:web:0bf8185776faee5e912753",
+
+    measurementId:
+        "G-2VRHM6JPTH"
+
+};
+
+
+// ========================================
+// START FIREBASE
+// ========================================
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+
+// ========================================
+// ELEMENTS
+// ========================================
+
+const emailInput =
+    document.getElementById("username");
+
+const passwordInput =
+    document.getElementById("password");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const errorBox =
+    document.getElementById("error");
+
+const successBox =
+    document.getElementById("success");
+
+const firebaseStatus =
+    document.getElementById("firebaseStatus");
+
+
+// Firebase loaded
+firebaseStatus.textContent =
+    "Secure login ready";
+
+firebaseStatus.style.color =
+    "#198754";
+
+
+// ========================================
+// LOGIN FUNCTION
+// ========================================
+
+async function login(){
+
+    const email =
+        emailInput.value.trim();
 
     const password =
-        document.getElementById("password").value;
+        passwordInput.value;
 
-    /*
-       TEMPORARY LOCAL LOGIN
-       Real secure authentication will be added
-       when we connect the online database.
-    */
 
-    if(username === "admin" && password === "12345"){
+    errorBox.style.display =
+        "none";
 
-        sessionStorage.setItem("arqamAdminLoggedIn","true");
+    successBox.style.display =
+        "none";
 
-        window.location.href = "admin.html";
 
-    }else{
+    // Check empty fields
 
-        document.getElementById("error").style.display = "block";
+    if(!email || !password){
+
+        errorBox.textContent =
+            "Please enter email and password.";
+
+        errorBox.style.display =
+            "block";
+
+        return;
+    }
+
+
+    // Disable button
+
+    loginButton.disabled =
+        true;
+
+    loginButton.textContent =
+        "LOGGING IN...";
+
+
+    try{
+
+        // Firebase Email Login
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+
+        // Save manager session
+
+        sessionStorage.setItem(
+            "arqamAdminLoggedIn",
+            "true"
+        );
+
+
+        // Success message
+
+        successBox.style.display =
+            "block";
+
+
+        firebaseStatus.textContent =
+            "Manager verified successfully";
+
+        firebaseStatus.style.color =
+            "#198754";
+
+
+        // Open dashboard
+
+        setTimeout(function(){
+
+            window.location.href =
+                "admin.html";
+
+        },800);
+
+
+    }catch(error){
+
+        console.error(
+            "Firebase Login Error:",
+            error
+        );
+
+
+        let message =
+            "Incorrect email or password.";
+
+
+        if(
+            error.code ===
+            "auth/invalid-credential"
+        ){
+
+            message =
+                "Incorrect email or password.";
+
+        }
+
+        else if(
+            error.code ===
+            "auth/user-not-found"
+        ){
+
+            message =
+                "Manager account not found.";
+
+        }
+
+        else if(
+            error.code ===
+            "auth/wrong-password"
+        ){
+
+            message =
+                "Incorrect password.";
+
+        }
+
+        else if(
+            error.code ===
+            "auth/invalid-email"
+        ){
+
+            message =
+                "Please enter a valid email.";
+
+        }
+
+        else if(
+            error.code ===
+            "auth/too-many-requests"
+        ){
+
+            message =
+                "Too many attempts. Please try again later.";
+
+        }
+
+        else if(
+            error.code ===
+            "auth/network-request-failed"
+        ){
+
+            message =
+                "Internet connection problem.";
+
+        }
+
+
+        errorBox.textContent =
+            message;
+
+        errorBox.style.display =
+            "block";
+
+
+        loginButton.disabled =
+            false;
+
+        loginButton.textContent =
+            "LOGIN";
 
     }
+
 }
 
-document.getElementById("password").addEventListener("keydown",function(event){
 
-    if(event.key === "Enter"){
-        login();
+// ========================================
+// BUTTON CLICK
+// ========================================
+
+loginButton.addEventListener(
+    "click",
+    login
+);
+
+
+// ========================================
+// ENTER KEY
+// ========================================
+
+passwordInput.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            login();
+
+        }
+
     }
-
-});
+);
 
 </script>
 
