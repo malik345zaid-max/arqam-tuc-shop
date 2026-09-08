@@ -104,19 +104,19 @@ button:disabled{
     font-weight:bold;
 }
 
+.firebase-status{
+    text-align:center;
+    font-size:13px;
+    color:#777;
+    margin-top:15px;
+}
+
 .back{
     display:block;
     text-align:center;
     margin-top:20px;
     color:#16733b;
     text-decoration:none;
-}
-
-.firebase-status{
-    text-align:center;
-    font-size:13px;
-    color:#777;
-    margin-top:15px;
 }
 
 </style>
@@ -176,14 +176,14 @@ button:disabled{
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 import {
     getAuth,
     signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+} from
+"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 
 // ========================================
@@ -216,7 +216,7 @@ const firebaseConfig = {
 
 
 // ========================================
-// START FIREBASE
+// FIREBASE START
 // ========================================
 
 const app = initializeApp(firebaseConfig);
@@ -247,7 +247,8 @@ const firebaseStatus =
     document.getElementById("firebaseStatus");
 
 
-// Firebase loaded
+// Firebase ready
+
 firebaseStatus.textContent =
     "Secure login ready";
 
@@ -256,7 +257,7 @@ firebaseStatus.style.color =
 
 
 // ========================================
-// LOGIN FUNCTION
+// LOGIN
 // ========================================
 
 async function login(){
@@ -275,8 +276,6 @@ async function login(){
         "none";
 
 
-    // Check empty fields
-
     if(!email || !password){
 
         errorBox.textContent =
@@ -289,8 +288,6 @@ async function login(){
     }
 
 
-    // Disable button
-
     loginButton.disabled =
         true;
 
@@ -300,8 +297,6 @@ async function login(){
 
     try{
 
-        // Firebase Email Login
-
         await signInWithEmailAndPassword(
             auth,
             email,
@@ -309,19 +304,14 @@ async function login(){
         );
 
 
-        // Save manager session
-
         sessionStorage.setItem(
             "arqamAdminLoggedIn",
             "true"
         );
 
 
-        // Success message
-
         successBox.style.display =
             "block";
-
 
         firebaseStatus.textContent =
             "Manager verified successfully";
@@ -329,8 +319,6 @@ async function login(){
         firebaseStatus.style.color =
             "#198754";
 
-
-        // Open dashboard
 
         setTimeout(function(){
 
@@ -352,63 +340,52 @@ async function login(){
             "Incorrect email or password.";
 
 
-        if(
-            error.code ===
-            "auth/invalid-credential"
-        ){
-
-            message =
-                "Incorrect email or password.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/user-not-found"
-        ){
-
-            message =
-                "Manager account not found.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/wrong-password"
-        ){
-
-            message =
-                "Incorrect password.";
-
-        }
-
-        else if(
-            error.code ===
-            "auth/invalid-email"
-        ){
+        if(error.code === "auth/invalid-email"){
 
             message =
                 "Please enter a valid email.";
 
         }
 
-        else if(
-            error.code ===
-            "auth/too-many-requests"
-        ){
+        else if(error.code === "auth/user-not-found"){
+
+            message =
+                "Manager account not found.";
+
+        }
+
+        else if(error.code === "auth/wrong-password"){
+
+            message =
+                "Incorrect password.";
+
+        }
+
+        else if(error.code === "auth/invalid-credential"){
+
+            message =
+                "Incorrect email or password.";
+
+        }
+
+        else if(error.code === "auth/too-many-requests"){
 
             message =
                 "Too many attempts. Please try again later.";
 
         }
 
-        else if(
-            error.code ===
-            "auth/network-request-failed"
-        ){
+        else if(error.code === "auth/network-request-failed"){
 
             message =
                 "Internet connection problem.";
+
+        }
+
+        else{
+
+            message =
+                "Login error: " + error.message;
 
         }
 
@@ -432,7 +409,7 @@ async function login(){
 
 
 // ========================================
-// BUTTON CLICK
+// LOGIN BUTTON
 // ========================================
 
 loginButton.addEventListener(
