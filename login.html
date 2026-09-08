@@ -1,14 +1,13 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Arqam TUC Shop - Manager Login</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     margin:0;
@@ -118,9 +117,7 @@ button:disabled{
     color:#16733b;
     text-decoration:none;
 }
-
 </style>
-
 </head>
 
 <body>
@@ -173,26 +170,24 @@ button:disabled{
 
 </div>
 
-
 <script type="module">
 
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 import {
     getAuth,
-    signInWithEmailAndPassword
-} from
-"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-
-// ========================================
-// FIREBASE CONFIG
-// ========================================
 
 const firebaseConfig = {
 
-    apiKey: "AIzaSyAHxIt-uneG3CSGk-JUPkTG2zJ2zO8ra2t5g",
+    apiKey:
+        "AIzaSyAHxIt-uneG3CSGk-JUPkTG2zJ2zO8ra2t5g",
 
     authDomain:
         "arqam-tuc-shop.firebaseapp.com",
@@ -211,22 +206,15 @@ const firebaseConfig = {
 
     measurementId:
         "G-2VRHM6JPTH"
-
 };
 
 
-// ========================================
-// FIREBASE START
-// ========================================
+const app =
+    initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
+const auth =
+    getAuth(app);
 
-const auth = getAuth(app);
-
-
-// ========================================
-// ELEMENTS
-// ========================================
 
 const emailInput =
     document.getElementById("username");
@@ -247,18 +235,12 @@ const firebaseStatus =
     document.getElementById("firebaseStatus");
 
 
-// Firebase ready
-
 firebaseStatus.textContent =
-    "Secure login ready";
+    "🟢 Secure login ready";
 
 firebaseStatus.style.color =
     "#198754";
 
-
-// ========================================
-// LOGIN
-// ========================================
 
 async function login(){
 
@@ -297,6 +279,18 @@ async function login(){
 
     try{
 
+        /*
+         IMPORTANT:
+         Save Firebase login in browser
+         so Admin Panel can detect it.
+        */
+
+        await setPersistence(
+            auth,
+            browserLocalPersistence
+        );
+
+
         await signInWithEmailAndPassword(
             auth,
             email,
@@ -304,28 +298,28 @@ async function login(){
         );
 
 
-        sessionStorage.setItem(
-            "arqamAdminLoggedIn",
-            "true"
-        );
-
-
         successBox.style.display =
             "block";
 
         firebaseStatus.textContent =
-            "Manager verified successfully";
+            "🟢 Manager verified successfully";
 
         firebaseStatus.style.color =
             "#198754";
 
 
+        /*
+         Give Firebase a moment to save
+         the authenticated session.
+        */
+
         setTimeout(function(){
 
-            window.location.href =
-                "admin.html";
+            window.location.replace(
+                "admin.html"
+            );
 
-        },800);
+        },1000);
 
 
     }catch(error){
@@ -340,42 +334,60 @@ async function login(){
             "Incorrect email or password.";
 
 
-        if(error.code === "auth/invalid-email"){
+        if(
+            error.code ===
+            "auth/invalid-email"
+        ){
 
             message =
                 "Please enter a valid email.";
 
         }
 
-        else if(error.code === "auth/user-not-found"){
+        else if(
+            error.code ===
+            "auth/user-not-found"
+        ){
 
             message =
                 "Manager account not found.";
 
         }
 
-        else if(error.code === "auth/wrong-password"){
+        else if(
+            error.code ===
+            "auth/wrong-password"
+        ){
 
             message =
                 "Incorrect password.";
 
         }
 
-        else if(error.code === "auth/invalid-credential"){
+        else if(
+            error.code ===
+            "auth/invalid-credential"
+        ){
 
             message =
                 "Incorrect email or password.";
 
         }
 
-        else if(error.code === "auth/too-many-requests"){
+        else if(
+            error.code ===
+            "auth/too-many-requests"
+        ){
 
             message =
                 "Too many attempts. Please try again later.";
 
         }
 
-        else if(error.code === "auth/network-request-failed"){
+        else if(
+            error.code ===
+            "auth/network-request-failed"
+        ){
 
             message =
                 "Internet connection problem.";
@@ -385,7 +397,8 @@ async function login(){
         else{
 
             message =
-                "Login error: " + error.message;
+                "Login error: " +
+                error.message;
 
         }
 
@@ -408,19 +421,11 @@ async function login(){
 }
 
 
-// ========================================
-// LOGIN BUTTON
-// ========================================
-
 loginButton.addEventListener(
     "click",
     login
 );
 
-
-// ========================================
-// ENTER KEY
-// ========================================
 
 passwordInput.addEventListener(
     "keydown",
@@ -439,3 +444,4 @@ passwordInput.addEventListener(
 
 </body>
 </html>
+```

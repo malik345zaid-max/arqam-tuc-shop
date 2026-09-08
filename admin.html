@@ -1,11 +1,15 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Arqam TUC Shop - Admin Panel</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -58,10 +62,21 @@ header h1{
     opacity:.85;
 }
 
-.green{background:#198754}
-.orange{background:#fd7e14}
-.purple{background:#6f42c1}
-.red{background:#dc3545}
+.green{
+    background:#198754;
+}
+
+.orange{
+    background:#fd7e14;
+}
+
+.purple{
+    background:#6f42c1;
+}
+
+.logout-btn{
+    background:#dc3545;
+}
 
 .cards{
     display:grid;
@@ -280,11 +295,8 @@ th{
     color:#555;
 }
 
-.logout-btn{
-    background:#dc3545;
-}
-
 @media(max-width:1000px){
+
     .cards{
         grid-template-columns:repeat(2,1fr);
     }
@@ -292,9 +304,11 @@ th{
     .quick-links{
         grid-template-columns:repeat(3,1fr);
     }
+
 }
 
 @media(max-width:650px){
+
     .cards,
     .form-grid,
     .quick-links{
@@ -312,18 +326,26 @@ th{
     .btn{
         text-align:center;
     }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <header>
-    <h1>ARQAM TUC SHOP</h1>
-    <p>Manager / Admin Dashboard</p>
+
+<h1>ARQAM TUC SHOP</h1>
+
+<p>Manager / Admin Dashboard</p>
+
 </header>
 
+
 <div class="container">
+
 
 <div class="top-buttons">
 
@@ -347,59 +369,117 @@ th{
 📊 Profit / Loss
 </a>
 
-<button class="btn logout-btn" id="logoutButton">
+<button
+class="btn logout-btn"
+id="logoutButton">
+
 🔒 Logout
+
 </button>
 
 </div>
 
-<div class="status-box" id="firebaseStatus">
+
+<div
+class="status-box"
+id="firebaseStatus">
+
 🔄 Checking manager authentication...
+
 </div>
+
 
 <div class="cards">
 
 <div class="card">
+
 <h3>Total Products</h3>
-<p id="totalProducts">0</p>
+
+<p id="totalProducts">
+0
+</p>
+
 </div>
+
 
 <div class="card">
+
 <h3>Total Orders</h3>
-<p id="totalOrders">0</p>
+
+<p id="totalOrders">
+0
+</p>
+
 </div>
+
 
 <div class="card pending">
+
 <h3>Pending Orders</h3>
-<p id="pendingOrders">0</p>
+
+<p id="pendingOrders">
+0
+</p>
+
 </div>
+
 
 <div class="card sales">
+
 <h3>Total Sales</h3>
-<p id="totalSales">Rs. 0</p>
+
+<p id="totalSales">
+Rs. 0
+</p>
+
 </div>
+
 
 <div class="card purchase">
+
 <h3>Total Purchases</h3>
-<p id="totalPurchases">Rs. 0</p>
+
+<p id="totalPurchases">
+Rs. 0
+</p>
+
 </div>
+
 
 <div class="card stock">
+
 <h3>Current Stock</h3>
-<p id="currentStock">0</p>
+
+<p id="currentStock">
+0
+</p>
+
 </div>
+
 
 <div class="card profit">
+
 <h3>Profit</h3>
-<p id="totalProfit">Rs. 0</p>
+
+<p id="totalProfit">
+Rs. 0
+</p>
+
 </div>
+
 
 <div class="card loss">
+
 <h3>Loss</h3>
-<p id="totalLoss">Rs. 0</p>
+
+<p id="totalLoss">
+Rs. 0
+</p>
+
 </div>
 
 </div>
+
 
 <div class="section">
 
@@ -431,6 +511,7 @@ th{
 
 </div>
 
+
 <div class="section">
 
 <h2 id="formTitle">
@@ -440,6 +521,7 @@ Add New Product
 <p style="color:#666;margin-top:5px;">
 Add or update products available in Arqam TUC Shop.
 </p>
+
 
 <div class="form-grid">
 
@@ -472,30 +554,40 @@ placeholder="Image URL">
 
 <div></div>
 
+
 <div class="full">
 
 <button
 class="save"
 id="saveButton">
+
 + Add Product
+
 </button>
+
 
 <button
 class="cancel hidden"
 id="cancelButton">
+
 Cancel Edit
+
 </button>
 
 </div>
 
 </div>
 
+
 <div class="info-box">
+
 💡 <strong>Cloud Stock:</strong>
 Products are stored in Firebase Firestore.
+
 </div>
 
 </div>
+
 
 <div class="section table-box">
 
@@ -506,17 +598,21 @@ Products are stored in Firebase Firestore.
 <thead>
 
 <tr>
+
 <th>Image</th>
 <th>Name</th>
 <th>Category</th>
 <th>Price</th>
 <th>Stock</th>
 <th>Actions</th>
+
 </tr>
 
 </thead>
 
-<tbody id="productTable"></tbody>
+<tbody id="productTable">
+
+</tbody>
 
 </table>
 
@@ -527,57 +623,108 @@ Products are stored in Firebase Firestore.
 
 <script type="module">
 
+
 import {
-    db,
-    auth,
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+import {
+    getFirestore,
     collection,
     getDocs,
     setDoc,
     doc,
     updateDoc,
     deleteDoc
-} from "./firebase.js";
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-import {
-    onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyAHxIt-uneG3CSGk-JUPkTG2zJ2zO8ra2t5g",
+
+    authDomain:
+        "arqam-tuc-shop.firebaseapp.com",
+
+    projectId:
+        "arqam-tuc-shop",
+
+    storageBucket:
+        "arqam-tuc-shop.firebasestorage.app",
+
+    messagingSenderId:
+        "182232116266",
+
+    appId:
+        "1:182232116266:web:0bf8185776faee5e912753",
+
+    measurementId:
+        "G-2VRHM6JPTH"
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+
+const auth =
+    getAuth(app);
+
+
+const db =
+    getFirestore(app);
 
 
 let products = [];
+
 let editIndex = -1;
+
 let managerReady = false;
 
 
 /* =========================
-   AUTHENTICATION
+   AUTH CHECK
 ========================= */
 
-onAuthStateChanged(auth, async function(user){
+onAuthStateChanged(
+    auth,
+    async function(user){
 
-    if(!user){
+        if(!user){
 
-        window.location.href = "login.html";
+            window.location.replace(
+                "login.html"
+            );
 
-        return;
+            return;
+
+        }
+
+
+        managerReady = true;
+
+
+        document.getElementById(
+            "firebaseStatus"
+        ).textContent =
+            "🟢 Manager authenticated — Firebase connected.";
+
+
+        await loadProducts();
+
+        updateDashboard();
 
     }
-
-
-    managerReady = true;
-
-
-    document.getElementById(
-        "firebaseStatus"
-    ).textContent =
-        "🟢 Manager authenticated — Firebase connected.";
-
-
-    await loadProducts();
-
-    updateDashboard();
-
-});
+);
 
 
 /* =========================
@@ -586,29 +733,29 @@ onAuthStateChanged(auth, async function(user){
 
 document
 .getElementById("logoutButton")
-.addEventListener("click",async function(){
+.addEventListener(
+    "click",
+    async function(){
 
-    try{
+        try{
 
-        await signOut(auth);
+            await signOut(auth);
 
-        sessionStorage.removeItem(
-            "arqamAdminLoggedIn"
-        );
+            window.location.replace(
+                "login.html"
+            );
 
-        window.location.href =
-            "login.html";
+        }catch(error){
 
-    }catch(error){
+            alert(
+                "Logout failed: " +
+                error.message
+            );
 
-        alert(
-            "Logout failed: " +
-            error.message
-        );
+        }
 
     }
-
-});
+);
 
 
 /* =========================
@@ -622,12 +769,17 @@ function getLocalData(key){
         const data =
             localStorage.getItem(key);
 
+
         if(!data){
+
             return [];
+
         }
+
 
         const parsed =
             JSON.parse(data);
+
 
         return Array.isArray(parsed)
             ? parsed
@@ -649,7 +801,9 @@ function getLocalData(key){
 async function loadProducts(){
 
     if(!managerReady){
+
         return;
+
     }
 
 
@@ -667,17 +821,19 @@ async function loadProducts(){
         products = [];
 
 
-        snapshot.forEach(function(item){
+        snapshot.forEach(
+            function(item){
 
-            products.push({
+                products.push({
 
-                id:item.id,
+                    id:item.id,
 
-                ...item.data()
+                    ...item.data()
 
-            });
+                });
 
-        });
+            }
+        );
 
 
         localStorage.setItem(
@@ -748,143 +904,156 @@ function displayProducts(){
     }
 
 
-    products.forEach(function(product,index){
+    products.forEach(
+        function(product,index){
 
-        const stock =
-            Number(product.stock) || 0;
-
-
-        let stockClass =
-            "stock-good";
-
-        let stockText =
-            stock;
+            const stock =
+                Number(product.stock) || 0;
 
 
-        if(stock <= 0){
+            let stockClass =
+                "stock-good";
 
-            stockClass =
-                "stock-out";
 
-            stockText =
-                "Out of Stock";
+            let stockText =
+                stock;
+
+
+            if(stock <= 0){
+
+                stockClass =
+                    "stock-out";
+
+                stockText =
+                    "Out of Stock";
+
+            }
+
+            else if(stock <= 5){
+
+                stockClass =
+                    "stock-low";
+
+            }
+
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+            <td>
+
+            ${
+                product.image
+                ?
+                `
+                <img
+                class="product-img"
+                src="${escapeHTML(product.image)}"
+                onerror="this.style.display='none'">
+                `
+                :
+                "—"
+            }
+
+            </td>
+
+            <td>
+
+            <strong>
+            ${escapeHTML(product.name || "-")}
+            </strong>
+
+            </td>
+
+            <td>
+            ${escapeHTML(product.category || "-")}
+            </td>
+
+            <td>
+            Rs.
+            ${Number(
+                product.price || 0
+            ).toLocaleString()}
+            </td>
+
+            <td class="${stockClass}">
+            ${stockText}
+            </td>
+
+            <td>
+
+            <button
+            class="edit"
+            data-index="${index}">
+
+            Edit
+
+            </button>
+
+            <button
+            class="delete"
+            data-index="${index}">
+
+            Delete
+
+            </button>
+
+            </td>
+
+            `;
+
+
+            table.appendChild(row);
 
         }
-
-        else if(stock <= 5){
-
-            stockClass =
-                "stock-low";
-
-        }
-
-
-        const row =
-            document.createElement("tr");
-
-
-        row.innerHTML = `
-
-        <td>
-
-        ${
-            product.image
-            ?
-            `
-            <img
-            class="product-img"
-            src="${escapeHTML(product.image)}"
-            onerror="this.style.display='none'">
-            `
-            :
-            "—"
-        }
-
-        </td>
-
-        <td>
-        <strong>
-        ${escapeHTML(product.name || "-")}
-        </strong>
-        </td>
-
-        <td>
-        ${escapeHTML(product.category || "-")}
-        </td>
-
-        <td>
-        Rs.
-        ${Number(
-            product.price || 0
-        ).toLocaleString()}
-        </td>
-
-        <td class="${stockClass}">
-        ${stockText}
-        </td>
-
-        <td>
-
-        <button
-        class="edit"
-        data-index="${index}">
-        Edit
-        </button>
-
-        <button
-        class="delete"
-        data-index="${index}">
-        Delete
-        </button>
-
-        </td>
-
-        `;
-
-
-        table.appendChild(row);
-
-    });
+    );
 
 
     document
     .querySelectorAll(".edit")
-    .forEach(function(button){
+    .forEach(
+        function(button){
 
-        button.addEventListener(
-            "click",
-            function(){
+            button.addEventListener(
+                "click",
+                function(){
 
-                editProduct(
-                    Number(
-                        button.dataset.index
-                    )
-                );
+                    editProduct(
+                        Number(
+                            button.dataset.index
+                        )
+                    );
 
-            }
-        );
+                }
+            );
 
-    });
+        }
+    );
 
 
     document
     .querySelectorAll(".delete")
-    .forEach(function(button){
+    .forEach(
+        function(button){
 
-        button.addEventListener(
-            "click",
-            function(){
+            button.addEventListener(
+                "click",
+                function(){
 
-                deleteProduct(
-                    Number(
-                        button.dataset.index
-                    )
-                );
+                    deleteProduct(
+                        Number(
+                            button.dataset.index
+                        )
+                    );
 
-            }
-        );
+                }
+            );
 
-    });
+        }
+    );
 
 }
 
@@ -896,10 +1065,15 @@ function displayProducts(){
 function escapeHTML(value){
 
     return String(value)
+
     .replace(/&/g,"&amp;")
+
     .replace(/</g,"&lt;")
+
     .replace(/>/g,"&gt;")
+
     .replace(/"/g,"&quot;")
+
     .replace(/'/g,"&#039;");
 
 }
@@ -911,184 +1085,192 @@ function escapeHTML(value){
 
 document
 .getElementById("saveButton")
-.addEventListener("click",async function(){
+.addEventListener(
+    "click",
+    async function(){
 
-    if(!managerReady){
-
-        alert(
-            "Manager authentication required."
-        );
-
-        return;
-
-    }
-
-
-    const name =
-        document
-        .getElementById("productName")
-        .value
-        .trim();
-
-
-    const category =
-        document
-        .getElementById("productCategory")
-        .value
-        .trim();
-
-
-    const price =
-        Number(
-            document
-            .getElementById("productPrice")
-            .value
-        );
-
-
-    const stock =
-        Number(
-            document
-            .getElementById("productStock")
-            .value
-        );
-
-
-    const image =
-        document
-        .getElementById("productImage")
-        .value
-        .trim();
-
-
-    if(!name || !category){
-
-        alert(
-            "Please enter product name and category."
-        );
-
-        return;
-
-    }
-
-
-    if(isNaN(price) || price < 0){
-
-        alert(
-            "Please enter a valid price."
-        );
-
-        return;
-
-    }
-
-
-    if(isNaN(stock) || stock < 0){
-
-        alert(
-            "Please enter valid stock."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        if(editIndex >= 0){
-
-            const product =
-                products[editIndex];
-
-
-            await updateDoc(
-                doc(
-                    db,
-                    "products",
-                    String(product.id)
-                ),
-                {
-
-                    name:name,
-
-                    category:category,
-
-                    price:price,
-
-                    stock:stock,
-
-                    image:image
-
-                }
-            );
-
+        if(!managerReady){
 
             alert(
-                "✅ Product updated!"
+                "Manager authentication required."
             );
 
-        }
-
-        else{
-
-            const id =
-                String(Date.now());
-
-
-            await setDoc(
-                doc(
-                    db,
-                    "products",
-                    id
-                ),
-                {
-
-                    name:name,
-
-                    category:category,
-
-                    price:price,
-
-                    stock:stock,
-
-                    image:image
-
-                }
-            );
-
-
-            alert(
-                "✅ Product added!"
-            );
+            return;
 
         }
 
 
-        clearForm();
-
-        await loadProducts();
-
-        updateDashboard();
-
-
-    }catch(error){
-
-        console.error(error);
+        const name =
+            document
+            .getElementById("productName")
+            .value
+            .trim();
 
 
-        alert(
-            "❌ Product save failed.\n\n" +
-            error.message
-        );
+        const category =
+            document
+            .getElementById("productCategory")
+            .value
+            .trim();
+
+
+        const price =
+            Number(
+                document
+                .getElementById("productPrice")
+                .value
+            );
+
+
+        const stock =
+            Number(
+                document
+                .getElementById("productStock")
+                .value
+            );
+
+
+        const image =
+            document
+            .getElementById("productImage")
+            .value
+            .trim();
+
+
+        if(!name || !category){
+
+            alert(
+                "Please enter product name and category."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            isNaN(price) ||
+            price < 0
+        ){
+
+            alert(
+                "Please enter a valid price."
+            );
+
+            return;
+
+        }
+
+
+        if(
+            isNaN(stock) ||
+            stock < 0
+        ){
+
+            alert(
+                "Please enter valid stock."
+            );
+
+            return;
+
+        }
+
+
+        try{
+
+            if(editIndex >= 0){
+
+                const product =
+                    products[editIndex];
+
+
+                await updateDoc(
+                    doc(
+                        db,
+                        "products",
+                        String(product.id)
+                    ),
+                    {
+
+                        name:name,
+
+                        category:category,
+
+                        price:price,
+
+                        stock:stock,
+
+                        image:image
+
+                    }
+                );
+
+
+                alert(
+                    "✅ Product updated!"
+                );
+
+            }
+
+            else{
+
+                const id =
+                    String(Date.now());
+
+
+                await setDoc(
+                    doc(
+                        db,
+                        "products",
+                        id
+                    ),
+                    {
+
+                        name:name,
+
+                        category:category,
+
+                        price:price,
+
+                        stock:stock,
+
+                        image:image
+
+                    }
+                );
+
+
+                alert(
+                    "✅ Product added!"
+                );
+
+            }
+
+
+            clearForm();
+
+            await loadProducts();
+
+            updateDashboard();
+
+        }catch(error){
+
+            console.error(error);
+
+
+            alert(
+                "❌ Product save failed.\n\n" +
+                error.message
+            );
+
+        }
 
     }
-
-});
+);
 
 
 /* =========================
-   EDIT
+   EDIT PRODUCT
 ========================= */
 
 function editProduct(index){
@@ -1098,7 +1280,9 @@ function editProduct(index){
 
 
     if(!product){
+
         return;
+
     }
 
 
@@ -1158,13 +1342,15 @@ function editProduct(index){
 
 
 /* =========================
-   DELETE
+   DELETE PRODUCT
 ========================= */
 
 async function deleteProduct(index){
 
     if(!managerReady){
+
         return;
+
     }
 
 
@@ -1173,7 +1359,9 @@ async function deleteProduct(index){
 
 
     if(!product){
+
         return;
+
     }
 
 
@@ -1182,7 +1370,9 @@ async function deleteProduct(index){
             `Delete "${product.name}"?`
         )
     ){
+
         return;
+
     }
 
 
@@ -1206,7 +1396,6 @@ async function deleteProduct(index){
 
         updateDashboard();
 
-
     }catch(error){
 
         alert(
@@ -1225,11 +1414,14 @@ async function deleteProduct(index){
 
 document
 .getElementById("cancelButton")
-.addEventListener("click",function(){
+.addEventListener(
+    "click",
+    function(){
 
-    clearForm();
+        clearForm();
 
-});
+    }
+);
 
 
 /* =========================
@@ -1306,66 +1498,84 @@ function updateDashboard(){
 
 
     const pending =
-        orders.filter(function(order){
+        orders.filter(
+            function(order){
 
-            return String(
-                order.status || "Pending"
-            )
-            .toLowerCase()
-            === "pending";
+                return String(
+                    order.status ||
+                    "Pending"
+                )
+                .toLowerCase()
+                === "pending";
 
-        });
+            }
+        );
 
 
     const sales =
-        orders.filter(function(order){
+        orders.filter(
+            function(order){
 
-            const status =
-                String(
-                    order.status || ""
-                )
-                .toLowerCase();
+                const status =
+                    String(
+                        order.status ||
+                        ""
+                    )
+                    .toLowerCase();
 
 
-            return(
-                status === "confirmed" ||
-                status === "delivered"
-            );
+                return(
+                    status === "confirmed" ||
+                    status === "delivered"
+                );
 
-        });
+            }
+        );
 
 
     let totalSales = 0;
 
 
-    sales.forEach(function(order){
+    sales.forEach(
+        function(order){
 
-        totalSales +=
-            Number(order.total) || 0;
+            totalSales +=
+                Number(
+                    order.total
+                ) || 0;
 
-    });
+        }
+    );
 
 
     let totalPurchases = 0;
 
 
-    purchases.forEach(function(purchase){
+    purchases.forEach(
+        function(purchase){
 
-        totalPurchases +=
-            Number(purchase.cost) || 0;
+            totalPurchases +=
+                Number(
+                    purchase.cost
+                ) || 0;
 
-    });
+        }
+    );
 
 
     let currentStock = 0;
 
 
-    products.forEach(function(product){
+    products.forEach(
+        function(product){
 
-        currentStock +=
-            Number(product.stock) || 0;
+            currentStock +=
+                Number(
+                    product.stock
+                ) || 0;
 
-    });
+        }
+    );
 
 
     const result =
@@ -1438,8 +1648,8 @@ function updateDashboard(){
 
 }
 
-
 </script>
 
 </body>
 </html>
+```
