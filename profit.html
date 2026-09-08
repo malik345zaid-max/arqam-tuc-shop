@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Profit & Loss - Arqam TUC Shop</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#222;
+}
+
+.header{
+    background:#0f766e;
+    color:white;
+    padding:22px;
+    text-align:center;
+}
+
+.header h1{
+    font-size:28px;
+}
+
+.header p{
+    margin-top:6px;
+    opacity:.9;
+}
+
+.container{
+    max-width:1200px;
+    margin:30px auto;
+    padding:0 20px;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.btn{
+    display:inline-block;
+    background:#374151;
+    color:white;
+    padding:11px 18px;
+    text-decoration:none;
+    border-radius:8px;
+}
+
+.blue{
+    background:#0b5ed7;
+}
+
+.green{
+    background:#198754;
+}
+
+.orange{
+    background:#fd7e14;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+    text-align:center;
+}
+
+.card h3{
+    color:#666;
+    font-size:16px;
+    margin-bottom:12px;
+}
+
+.card .value{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.sales .value{
+    color:#2563eb;
+}
+
+.purchase .value{
+    color:#f59e0b;
+}
+
+.profit .value{
+    color:#16a34a;
+}
+
+.loss .value{
+    color:#dc2626;
+}
+
+.products .value{
+    color:#7c3aed;
+}
+
+.orders .value{
+    color:#0891b2;
+}
+
+.stock .value{
+    color:#9333ea;
+}
+
+.summary{
+    margin-top:30px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+.summary h2{
+    margin-bottom:20px;
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    padding:14px 0;
+    border-bottom:1px solid #eee;
+    font-size:17px;
+}
+
+.row:last-child{
+    border-bottom:none;
+}
+
+.profit-text{
+    color:#16a34a;
+    font-weight:bold;
+}
+
+.loss-text{
+    color:#dc2626;
+    font-weight:bold;
+}
+
+.refresh{
+    margin-top:25px;
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    background:#0f766e;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.refresh:hover{
+    background:#115e59;
+}
+
+.info{
+    background:#e6fffb;
+    color:#115e59;
+    padding:15px;
+    border-radius:9px;
+    margin-bottom:25px;
+    line-height:1.6;
+}
+
+@media(max-width:700px){
+
+    .row{
+        font-size:15px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>📊 Profit / Loss Dashboard</h1>
+
+    <p>
+        Arqam TUC Shop - Manager Panel
+    </p>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- NAVIGATION -->
+
+    <div class="buttons">
+
+        <a href="admin.html" class="btn">
+            ← Admin Panel
+        </a>
+
+        <a href="orders.html" class="btn orange">
+            🛒 Orders
+        </a>
+
+        <a href="sales.html" class="btn blue">
+            💰 Sales
+        </a>
+
+        <a href="purchases.html" class="btn green">
+            🧾 Purchases
+        </a>
+
+        <a href="products.html" class="btn">
+            📦 Products
+        </a>
+
+    </div>
+
+
+    <!-- INFO -->
+
+    <div class="info">
+
+        <strong>📊 Automatic Financial Dashboard</strong>
+
+        <br>
+
+        Sales are taken from
+        <strong>Confirmed</strong> and
+        <strong>Delivered</strong> orders.
+
+        Purchases are taken from your
+        <strong>Purchase Records</strong>.
+
+        The dashboard updates automatically.
+
+    </div>
+
+
+    <!-- CARDS -->
+
+    <div class="cards">
+
+
+        <div class="card sales">
+
+            <h3>
+                💰 Total Sales
+            </h3>
+
+            <div
+                class="value"
+                id="totalSales">
+
+                Rs. 0
+
+            </div>
+
+        </div>
+
+
+        <div class="card purchase">
+
+            <h3>
+                🧾 Total Purchases
+            </h3>
+
+            <div
+                class="value"
+                id="totalPurchases">
+
+                Rs. 0
+
+            </div>
+
+        </div>
+
+
+        <div class="card profit">
+
+            <h3>
+                📈 Profit
+            </h3>
+
+            <div
+                class="value"
+                id="profit">
+
+                Rs. 0
+
+            </div>
+
+        </div>
+
+
+        <div class="card loss">
+
+            <h3>
+                📉 Loss
+            </h3>
+
+            <div
+                class="value"
+                id="loss">
+
+                Rs. 0
+
+            </div>
+
+        </div>
+
+
+        <div class="card products">
+
+            <h3>
+                📦 Total Products
+            </h3>
+
+            <div
+                class="value"
+                id="totalProducts">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <div class="card stock">
+
+            <h3>
+                📊 Current Stock
+            </h3>
+
+            <div
+                class="value"
+                id="currentStock">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <div class="card orders">
+
+            <h3>
+                🛒 Total Orders
+            </h3>
+
+            <div
+                class="value"
+                id="totalOrders">
+
+                0
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+        <h2>
+            📋 Financial Summary
+        </h2>
+
+
+        <div class="row">
+
+            <span>
+                Total Sales
+            </span>
+
+            <strong id="summarySales">
+                Rs. 0
+            </strong>
+
+        </div>
+
+
+        <div class="row">
+
+            <span>
+                Total Purchases
+            </span>
+
+            <strong id="summaryPurchases">
+                Rs. 0
+            </strong>
+
+        </div>
+
+
+        <div class="row">
+
+            <span>
+                Final Result
+            </span>
+
+            <strong id="finalResult">
+                Rs. 0
+            </strong>
+
+        </div>
+
+
+        <button
+            class="refresh"
+            onclick="loadDashboard()">
+
+            🔄 Refresh Dashboard
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+// ========================================
+// GET DATA
+// ========================================
+
+function getData(key){
+
+    try{
+
+        const data =
+            localStorage.getItem(key);
+
+        if(!data){
+            return [];
+        }
+
+        const parsed =
+            JSON.parse(data);
+
+        return Array.isArray(parsed)
+            ? parsed
+            : [];
+
+    }catch(error){
+
+        console.error(
+            "Data error:",
+            error
+        );
+
+        return [];
+
+    }
+
+}
+
+
+// ========================================
+// LOAD DASHBOARD
+// ========================================
+
+function loadDashboard(){
+
+
+    // ------------------------------------
+    // ORDERS
+    // ------------------------------------
+
+    const orders =
+        getData("arqamOrders");
+
+
+    // ------------------------------------
+    // SALES
+    // Only Confirmed + Delivered
+    // ------------------------------------
+
+    const sales =
+        orders.filter(order => {
+
+            const status =
+                String(
+                    order.status || ""
+                )
+                .trim()
+                .toLowerCase();
+
+            return (
+                status === "confirmed" ||
+                status === "delivered"
+            );
+
+        });
+
+
+    // ------------------------------------
+    // PURCHASES
+    // ------------------------------------
+
+    const purchases =
+        getData("arqamPurchases");
+
+
+    // ------------------------------------
+    // PRODUCTS
+    // ------------------------------------
+
+    const products =
+        getData("arqamProducts");
+
+
+    // ====================================
+    // TOTAL SALES
+    // ====================================
+
+    let totalSales = 0;
+
+
+    sales.forEach(order => {
+
+        totalSales +=
+            Number(order.total) || 0;
+
+    });
+
+
+    // ====================================
+    // TOTAL PURCHASES
+    // ====================================
+
+    let totalPurchases = 0;
+
+
+    purchases.forEach(purchase => {
+
+        totalPurchases +=
+            Number(purchase.cost) || 0;
+
+    });
+
+
+    // ====================================
+    // CURRENT STOCK
+    // ====================================
+
+    let currentStock = 0;
+
+
+    products.forEach(product => {
+
+        currentStock +=
+            Number(product.stock) || 0;
+
+    });
+
+
+    // ====================================
+    // PROFIT / LOSS
+    // ====================================
+
+    const result =
+        totalSales - totalPurchases;
+
+
+    let profit = 0;
+
+    let loss = 0;
+
+
+    if(result >= 0){
+
+        profit = result;
+
+        loss = 0;
+
+    }else{
+
+        profit = 0;
+
+        loss = Math.abs(result);
+
+    }
+
+
+    // ====================================
+    // UPDATE CARDS
+    // ====================================
+
+    document.getElementById(
+        "totalSales"
+    ).textContent =
+        "Rs. " +
+        totalSales.toLocaleString();
+
+
+    document.getElementById(
+        "totalPurchases"
+    ).textContent =
+        "Rs. " +
+        totalPurchases.toLocaleString();
+
+
+    document.getElementById(
+        "profit"
+    ).textContent =
+        "Rs. " +
+        profit.toLocaleString();
+
+
+    document.getElementById(
+        "loss"
+    ).textContent =
+        "Rs. " +
+        loss.toLocaleString();
+
+
+    document.getElementById(
+        "totalProducts"
+    ).textContent =
+        products.length;
+
+
+    document.getElementById(
+        "currentStock"
+    ).textContent =
+        currentStock.toLocaleString();
+
+
+    document.getElementById(
+        "totalOrders"
+    ).textContent =
+        orders.length;
+
+
+    // ====================================
+    // SUMMARY
+    // ====================================
+
+    document.getElementById(
+        "summarySales"
+    ).textContent =
+        "Rs. " +
+        totalSales.toLocaleString();
+
+
+    document.getElementById(
+        "summaryPurchases"
+    ).textContent =
+        "Rs. " +
+        totalPurchases.toLocaleString();
+
+
+    // ====================================
+    // FINAL RESULT
+    // ====================================
+
+    const finalResult =
+        document.getElementById(
+            "finalResult"
+        );
+
+
+    if(result >= 0){
+
+        finalResult.textContent =
+            "Profit: Rs. " +
+            result.toLocaleString();
+
+        finalResult.className =
+            "profit-text";
+
+    }else{
+
+        finalResult.textContent =
+            "Loss: Rs. " +
+            Math.abs(result).toLocaleString();
+
+        finalResult.className =
+            "loss-text";
+
+    }
+
+}
+
+
+// ========================================
+// FIRST LOAD
+// ========================================
+
+loadDashboard();
+
+
+// ========================================
+// AUTO UPDATE
+// ========================================
+
+window.addEventListener(
+    "storage",
+    function(event){
+
+        if(
+            event.key === "arqamOrders" ||
+            event.key === "arqamPurchases" ||
+            event.key === "arqamProducts"
+        ){
+
+            loadDashboard();
+
+        }
+
+    }
+);
+
+
+// Refresh automatically every 2 seconds
+
+setInterval(
+    loadDashboard,
+    2000
+);
+
+
+</script>
+
+</body>
+</html>

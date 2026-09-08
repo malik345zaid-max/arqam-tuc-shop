@@ -1,0 +1,1126 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arqam TUC Shop - Products</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #0b5ed7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        nav {
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 8px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            transition: 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .product-card h3 {
+            margin-top: 12px;
+            margin-bottom: 7px;
+        }
+
+        .category {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0b5ed7;
+            margin: 10px 0;
+        }
+
+        .stock {
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .available {
+            color: #198754;
+        }
+
+        .out-stock {
+            color: #dc3545;
+        }
+
+        .add-btn {
+            width: 100%;
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .add-btn:hover {
+            background: #157347;
+        }
+
+        .add-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .cart-section,
+        .order-section {
+            background: white;
+            margin-top: 35px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+            gap: 10px;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity button {
+            padding: 6px 12px;
+            border: none;
+            background: #0b5ed7;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .order-section input,
+        .order-section textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        .order-section textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0b5ed7;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .order-btn:hover {
+            background: #084298;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        .success-note {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>ARQAM TUC SHOP</h1>
+
+    <p>Uniforms & Stationery</p>
+
+    <nav>
+        <a href="index.html">Home</a>
+    </nav>
+
+</header>
+
+
+<div class="container">
+
+    <h2 class="section-title">
+        Our Products
+    </h2>
+
+
+    <!-- PRODUCTS -->
+
+    <div
+        class="products-grid"
+        id="products-container">
+    </div>
+
+
+    <!-- CART -->
+
+    <div class="cart-section">
+
+        <h2>🛒 Shopping Cart</h2>
+
+        <br>
+
+        <div id="cart-container">
+        </div>
+
+        <div
+            class="total"
+            id="cart-total">
+            Total: Rs. 0
+        </div>
+
+    </div>
+
+
+    <!-- ORDER -->
+
+    <div class="order-section">
+
+        <h2>📦 Customer Information</h2>
+
+        <br>
+
+        <div
+            id="success-note"
+            class="success-note">
+        </div>
+
+        <input
+            type="text"
+            id="customer-name"
+            placeholder="Your Name"
+        >
+
+        <input
+            type="tel"
+            id="customer-phone"
+            placeholder="Mobile Number"
+        >
+
+        <textarea
+            id="customer-address"
+            placeholder="Delivery Address"
+        ></textarea>
+
+        <button
+            class="order-btn"
+            onclick="placeOrder()">
+            ✅ Place Your Order
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="products.js"></script>
+
+<script>
+
+    let cart = [];
+
+
+    /*
+        GET PRODUCTS
+    */
+
+    function getProducts() {
+
+        try {
+
+            const savedProducts =
+                localStorage.getItem("arqamProducts");
+
+            if (savedProducts) {
+
+                const parsed =
+                    JSON.parse(savedProducts);
+
+                return Array.isArray(parsed)
+                    ? parsed
+                    : [];
+
+            }
+
+            if (
+                typeof products !== "undefined" &&
+                Array.isArray(products)
+            ) {
+
+                return products;
+
+            }
+
+            return [];
+
+        } catch (error) {
+
+            console.error(
+                "Products data error:",
+                error
+            );
+
+            return [];
+
+        }
+
+    }
+
+
+    /*
+        DISPLAY PRODUCTS
+    */
+
+    function displayProducts() {
+
+        const container =
+            document.getElementById(
+                "products-container"
+            );
+
+        const shopProducts =
+            getProducts();
+
+        container.innerHTML = "";
+
+
+        if (
+            !shopProducts ||
+            shopProducts.length === 0
+        ) {
+
+            container.innerHTML = `
+                <p class="empty">
+                    No products available.
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        shopProducts.forEach(product => {
+
+            const stock =
+                Number(product.stock) || 0;
+
+            const outOfStock =
+                stock <= 0;
+
+
+            container.innerHTML += `
+
+                <div class="product-card">
+
+                    <img
+                        src="${product.image || 'https://placehold.co/500x500?text=No+Image'}"
+                        onerror="
+                            this.src='https://placehold.co/500x500?text=No+Image'
+                        "
+                    >
+
+                    <h3>
+                        ${product.name || "Unnamed Product"}
+                    </h3>
+
+                    <p class="category">
+                        ${product.category || "General"}
+                    </p>
+
+                    <p class="price">
+                        Rs. ${Number(product.price) || 0}
+                    </p>
+
+                    <p class="stock ${
+                        outOfStock
+                            ? "out-stock"
+                            : "available"
+                    }">
+
+                        ${
+                            outOfStock
+                            ? "❌ Out of Stock"
+                            : "📦 Available Stock: " + stock
+                        }
+
+                    </p>
+
+                    <button
+                        class="add-btn"
+                        onclick="addToCart(${JSON.stringify(product.id)})"
+                        ${outOfStock ? "disabled" : ""}
+                    >
+
+                        ${
+                            outOfStock
+                            ? "Out of Stock"
+                            : "🛒 Add to Cart"
+                        }
+
+                    </button>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+
+    /*
+        ADD TO CART
+    */
+
+    function addToCart(id) {
+
+        const shopProducts =
+            getProducts();
+
+        const product =
+            shopProducts.find(
+                p => String(p.id) === String(id)
+            );
+
+        if (!product) {
+
+            alert(
+                "Product not found."
+            );
+
+            return;
+
+        }
+
+
+        const stock =
+            Number(product.stock) || 0;
+
+
+        if (stock <= 0) {
+
+            alert(
+                "This product is out of stock."
+            );
+
+            return;
+
+        }
+
+
+        const existing =
+            cart.find(
+                item =>
+                    String(item.id) ===
+                    String(id)
+            );
+
+
+        if (existing) {
+
+            if (
+                existing.quantity <
+                stock
+            ) {
+
+                existing.quantity++;
+
+            } else {
+
+                alert(
+                    "Available stock limit reached."
+                );
+
+                return;
+
+            }
+
+        } else {
+
+            cart.push({
+
+                id: product.id,
+
+                name: product.name,
+
+                price:
+                    Number(product.price) || 0,
+
+                quantity: 1
+
+            });
+
+        }
+
+
+        displayCart();
+
+    }
+
+
+    /*
+        DISPLAY CART
+    */
+
+    function displayCart() {
+
+        const container =
+            document.getElementById(
+                "cart-container"
+            );
+
+        const totalElement =
+            document.getElementById(
+                "cart-total"
+            );
+
+
+        if (cart.length === 0) {
+
+            container.innerHTML = `
+                <p class="empty">
+                    Your cart is empty.
+                </p>
+            `;
+
+            totalElement.innerText =
+                "Total: Rs. 0";
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+        let total = 0;
+
+
+        cart.forEach(item => {
+
+            const itemTotal =
+                item.price *
+                item.quantity;
+
+            total += itemTotal;
+
+
+            container.innerHTML += `
+
+                <div class="cart-item">
+
+                    <div>
+
+                        <strong>
+                            ${item.name}
+                        </strong>
+
+                        <br>
+
+                        Rs. ${item.price}
+                        ×
+                        ${item.quantity}
+
+                        <br>
+
+                        <strong>
+                            Subtotal: Rs.
+                            ${itemTotal}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="quantity">
+
+                        <button
+                            onclick="
+                                changeQuantity(
+                                    ${JSON.stringify(item.id)},
+                                    -1
+                                )
+                            ">
+                            −
+                        </button>
+
+                        <span>
+                            ${item.quantity}
+                        </span>
+
+                        <button
+                            onclick="
+                                changeQuantity(
+                                    ${JSON.stringify(item.id)},
+                                    1
+                                )
+                            ">
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <button
+                        class="remove-btn"
+                        onclick="
+                            removeFromCart(
+                                ${JSON.stringify(item.id)}
+                            )
+                        ">
+                        Remove
+                    </button>
+
+                </div>
+
+            `;
+
+        });
+
+
+        totalElement.innerText =
+            "Total: Rs. " + total;
+
+    }
+
+
+    /*
+        CHANGE QUANTITY
+    */
+
+    function changeQuantity(id, amount) {
+
+        const item =
+            cart.find(
+                item =>
+                    String(item.id) ===
+                    String(id)
+            );
+
+        if (!item) return;
+
+
+        const shopProducts =
+            getProducts();
+
+        const product =
+            shopProducts.find(
+                p =>
+                    String(p.id) ===
+                    String(id)
+            );
+
+        if (!product) return;
+
+
+        const stock =
+            Number(product.stock) || 0;
+
+
+        const newQuantity =
+            item.quantity + amount;
+
+
+        if (newQuantity <= 0) {
+
+            removeFromCart(id);
+
+            return;
+
+        }
+
+
+        if (newQuantity > stock) {
+
+            alert(
+                "You cannot order more than available stock."
+            );
+
+            return;
+
+        }
+
+
+        item.quantity =
+            newQuantity;
+
+
+        displayCart();
+
+    }
+
+
+    /*
+        REMOVE FROM CART
+    */
+
+    function removeFromCart(id) {
+
+        cart =
+            cart.filter(
+                item =>
+                    String(item.id) !==
+                    String(id)
+            );
+
+        displayCart();
+
+    }
+
+
+    /*
+        PLACE ORDER
+    */
+
+    function placeOrder() {
+
+        if (cart.length === 0) {
+
+            alert(
+                "Please add a product to your cart first."
+            );
+
+            return;
+
+        }
+
+
+        const name =
+            document
+                .getElementById(
+                    "customer-name"
+                )
+                .value
+                .trim();
+
+
+        const phone =
+            document
+                .getElementById(
+                    "customer-phone"
+                )
+                .value
+                .trim();
+
+
+        const address =
+            document
+                .getElementById(
+                    "customer-address"
+                )
+                .value
+                .trim();
+
+
+        if (
+            !name ||
+            !phone ||
+            !address
+        ) {
+
+            alert(
+                "Please fill all customer information."
+            );
+
+            return;
+
+        }
+
+
+        /*
+            GET CURRENT PRODUCTS
+        */
+
+        const shopProducts =
+            getProducts();
+
+
+        /*
+            FINAL STOCK CHECK
+        */
+
+        for (const item of cart) {
+
+            const product =
+                shopProducts.find(
+                    p =>
+                        String(p.id) ===
+                        String(item.id)
+                );
+
+
+            if (!product) {
+
+                alert(
+                    "A product in your cart is no longer available."
+                );
+
+                return;
+
+            }
+
+
+            const stock =
+                Number(product.stock) || 0;
+
+
+            if (
+                stock < item.quantity
+            ) {
+
+                alert(
+                    product.name +
+                    " does not have enough stock."
+                );
+
+                displayProducts();
+
+                return;
+
+            }
+
+        }
+
+
+        /*
+            CALCULATE TOTAL
+        */
+
+        let total = 0;
+
+
+        cart.forEach(item => {
+
+            total +=
+                Number(item.price) *
+                Number(item.quantity);
+
+        });
+
+
+        /*
+            GET ORDERS
+        */
+
+        let orders = [];
+
+
+        try {
+
+            const savedOrders =
+                localStorage.getItem(
+                    "arqamOrders"
+                );
+
+            if (savedOrders) {
+
+                const parsedOrders =
+                    JSON.parse(savedOrders);
+
+                if (
+                    Array.isArray(parsedOrders)
+                ) {
+
+                    orders = parsedOrders;
+
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Orders data error:",
+                error
+            );
+
+        }
+
+
+        /*
+            CREATE ORDER
+
+            IMPORTANT:
+            Stock is NOT reduced here.
+
+            Stock will be reduced from
+            orders.html when manager
+            changes order to Confirmed.
+        */
+
+        const newOrder = {
+
+            id: Date.now(),
+
+            name: name,
+
+            phone: phone,
+
+            address: address,
+
+            date:
+                new Date()
+                    .toLocaleString(),
+
+            total: total,
+
+            status: "Pending",
+
+            stockProcessed: false,
+
+            items:
+                cart.map(item => ({
+
+                    id: item.id,
+
+                    productId: item.id,
+
+                    name: item.name,
+
+                    price: item.price,
+
+                    quantity: item.quantity,
+
+                    qty: item.quantity
+
+                }))
+
+        };
+
+
+        /*
+            SAVE ORDER
+        */
+
+        orders.push(newOrder);
+
+
+        localStorage.setItem(
+            "arqamOrders",
+            JSON.stringify(orders)
+        );
+
+
+        /*
+            SUCCESS
+        */
+
+        alert(
+            "✅ ORDER PLACED SUCCESSFULLY!\n\n" +
+
+            "Order ID: #" +
+            newOrder.id +
+
+            "\nCustomer: " +
+            name +
+
+            "\nMobile: " +
+            phone +
+
+            "\nTotal: Rs. " +
+            total +
+
+            "\n\nYour order is Pending.\n" +
+            "Stock will be deducted when the manager confirms the order."
+        );
+
+
+        /*
+            CLEAR CART
+        */
+
+        cart = [];
+
+        displayCart();
+
+
+        /*
+            REFRESH PRODUCTS
+
+            Stock remains unchanged because
+            order is still Pending.
+        */
+
+        displayProducts();
+
+
+        /*
+            CLEAR CUSTOMER INFORMATION
+        */
+
+        document.getElementById(
+            "customer-name"
+        ).value = "";
+
+        document.getElementById(
+            "customer-phone"
+        ).value = "";
+
+        document.getElementById(
+            "customer-address"
+        ).value = "";
+
+    }
+
+
+    /*
+        AUTO REFRESH
+
+        If manager changes stock from
+        another page, Shop updates.
+    */
+
+    window.addEventListener(
+        "storage",
+        function(event) {
+
+            if (
+                event.key ===
+                "arqamProducts"
+            ) {
+
+                displayProducts();
+
+                displayCart();
+
+            }
+
+        }
+    );
+
+
+    /*
+        PAGE LOAD
+    */
+
+    displayProducts();
+
+    displayCart();
+
+
+</script>
+
+</body>
+</html>
+```

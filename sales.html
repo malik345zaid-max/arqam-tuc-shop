@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arqam TUC Shop - Sales</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+}
+
+header {
+    background: #0b5ed7;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 6px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+button,
+a.btn {
+    border: none;
+    padding: 11px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    background: #0b5ed7;
+    font-size: 14px;
+}
+
+button:hover,
+a.btn:hover {
+    opacity: 0.85;
+}
+
+.green {
+    background: #198754;
+}
+
+.orange {
+    background: #fd7e14;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 28px;
+    font-weight: bold;
+    color: #0b5ed7;
+}
+
+.table-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #f1f5f9;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.confirmed {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.delivered {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.info {
+    background: #e7f1ff;
+    color: #084298;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    th,
+    td {
+        font-size: 13px;
+        padding: 9px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>ARQAM TUC SHOP</h1>
+    <p>Sales Management</p>
+</header>
+
+<div class="container">
+
+    <div class="buttons">
+
+        <a href="admin.html" class="btn">
+            ← Admin Panel
+        </a>
+
+        <a href="products.html" class="btn green">
+            🛍️ Shop
+        </a>
+
+        <a href="orders.html" class="btn orange">
+            🛒 Orders
+        </a>
+
+        <a href="purchases.html" class="btn">
+            🧾 Purchases
+        </a>
+
+        <a href="profit.html" class="btn">
+            📊 Profit / Loss
+        </a>
+
+    </div>
+
+    <div class="info">
+        <strong>Sales automatically connected with Orders.</strong><br>
+        Only <strong>Confirmed</strong> and <strong>Delivered</strong> orders are counted as sales.
+        Pending and Cancelled orders are not included.
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Sales</h3>
+            <p id="totalSales">Rs. 0</p>
+        </div>
+
+        <div class="card">
+            <h3>Completed Orders</h3>
+            <p id="completedOrders">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Items Sold</h3>
+            <p id="itemsSold">0</p>
+        </div>
+
+    </div>
+
+    <div class="table-box">
+
+        <h2>Sales Records</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="salesTable"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+
+// ===============================
+// GET ORDERS
+// ===============================
+
+function getOrders() {
+
+    const saved = localStorage.getItem("arqamOrders");
+
+    if (!saved) {
+        return [];
+    }
+
+    try {
+
+        const orders = JSON.parse(saved);
+
+        return Array.isArray(orders) ? orders : [];
+
+    } catch (error) {
+
+        console.error("Orders data error:", error);
+
+        return [];
+
+    }
+}
+
+
+// ===============================
+// LOAD SALES
+// ===============================
+
+function loadSales() {
+
+    const orders = getOrders();
+
+    /*
+        SALES RULE:
+
+        Confirmed = Sale
+        Delivered = Sale
+
+        Pending = Not Sale
+        Cancelled = Not Sale
+    */
+
+    const sales = orders.filter(order => {
+
+        const status = String(order.status || "")
+            .trim()
+            .toLowerCase();
+
+        return status === "confirmed" ||
+               status === "delivered";
+
+    });
+
+
+    let totalSales = 0;
+
+    let itemsSold = 0;
+
+
+    sales.forEach(order => {
+
+        totalSales += Number(order.total) || 0;
+
+
+        if (Array.isArray(order.items)) {
+
+            order.items.forEach(item => {
+
+                const quantity =
+                    Number(item.quantity) ||
+                    Number(item.qty) ||
+                    1;
+
+                itemsSold += quantity;
+
+            });
+
+        }
+
+    });
+
+
+    // ===============================
+    // UPDATE CARDS
+    // ===============================
+
+    document.getElementById("totalSales").textContent =
+        "Rs. " + totalSales.toLocaleString();
+
+
+    document.getElementById("completedOrders").textContent =
+        sales.length;
+
+
+    document.getElementById("itemsSold").textContent =
+        itemsSold;
+
+
+    // ===============================
+    // TABLE
+    // ===============================
+
+    const table = document.getElementById("salesTable");
+
+    table.innerHTML = "";
+
+
+    if (sales.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    No completed sales yet.
+                    <br><br>
+                    Confirm an order from the Orders page.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    // Latest sales first
+    const latestSales = [...sales].reverse();
+
+
+    latestSales.forEach(order => {
+
+        let items = "";
+
+
+        if (Array.isArray(order.items)) {
+
+            items = order.items.map(item => {
+
+                const quantity =
+                    Number(item.quantity) ||
+                    Number(item.qty) ||
+                    1;
+
+                const name = item.name || "Product";
+
+                return `${name} × ${quantity}`;
+
+            }).join("<br>");
+
+        }
+
+
+        const row = document.createElement("tr");
+
+
+        const status =
+            String(order.status || "Confirmed");
+
+
+        const statusClass =
+            status.toLowerCase() === "delivered"
+                ? "delivered"
+                : "confirmed";
+
+
+        row.innerHTML = `
+
+            <td>
+                <strong>#${order.id || "-"}</strong>
+            </td>
+
+            <td>
+
+                <strong>
+                    ${order.name || "Customer"}
+                </strong>
+
+                <br>
+
+                ${order.phone || ""}
+
+            </td>
+
+            <td>
+                ${order.date || "-"}
+            </td>
+
+            <td>
+                ${items || "-"}
+            </td>
+
+            <td>
+
+                <strong>
+                    Rs. ${(Number(order.total) || 0).toLocaleString()}
+                </strong>
+
+            </td>
+
+            <td>
+
+                <span class="status ${statusClass}">
+                    ${status}
+                </span>
+
+            </td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+// ===============================
+// AUTO REFRESH
+// ===============================
+
+loadSales();
+
+
+// If Orders page changes data,
+// Sales page updates automatically
+// when user returns/reloads the page.
+
+window.addEventListener("storage", function(event) {
+
+    if (event.key === "arqamOrders") {
+
+        loadSales();
+
+    }
+
+});
+
+
+// Refresh every 2 seconds
+setInterval(loadSales, 2000);
+
+</script>
+
+</body>
+</html>

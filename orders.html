@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Arqam TUC Shop - Orders</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+}
+
+header{
+    background:#0b5ed7;
+    color:white;
+    padding:22px;
+    text-align:center;
+}
+
+header h1{
+    margin:0 0 5px;
+}
+
+.container{
+    width:95%;
+    max-width:1200px;
+    margin:25px auto;
+}
+
+.top-buttons{
+    margin-bottom:20px;
+}
+
+.top-buttons a{
+    display:inline-block;
+    text-decoration:none;
+    background:#0b5ed7;
+    color:white;
+    padding:10px 16px;
+    border-radius:7px;
+    margin-right:8px;
+    margin-bottom:8px;
+}
+
+.top-buttons a:hover{
+    opacity:.85;
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    margin-bottom:25px;
+}
+
+h2{
+    color:#0b5ed7;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    padding:20px;
+    background:#f1f3f5;
+    border-radius:10px;
+    text-align:center;
+}
+
+.stat strong{
+    display:block;
+    font-size:28px;
+    margin-top:8px;
+}
+
+.stat.sales{
+    background:#e8f5e9;
+}
+
+.stat.pending{
+    background:#fff3cd;
+}
+
+.stat.stock{
+    background:#e8f0fe;
+}
+
+.order{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:18px;
+    margin-top:15px;
+    background:white;
+}
+
+.order h3{
+    margin-bottom:12px;
+    color:#0b5ed7;
+}
+
+.order p{
+    margin:7px 0;
+}
+
+.items{
+    background:#f8f9fa;
+    padding:12px;
+    border-radius:7px;
+    margin:12px 0;
+}
+
+.item-row{
+    padding:8px 0;
+    border-bottom:1px solid #ddd;
+}
+
+.item-row:last-child{
+    border-bottom:none;
+}
+
+.status{
+    padding:9px 12px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    margin-right:8px;
+    background:white;
+}
+
+button{
+    border:none;
+    padding:9px 14px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+.delete{
+    background:#dc3545;
+    color:white;
+}
+
+.clear{
+    background:#6c757d;
+    color:white;
+}
+
+.stock-info{
+    margin-top:12px;
+    padding:12px;
+    border-radius:7px;
+    background:#e8f5e9;
+    color:#198754;
+    font-weight:bold;
+}
+
+.cancelled-info{
+    background:#f8d7da;
+    color:#842029;
+}
+
+.warning-info{
+    background:#fff3cd;
+    color:#664d03;
+}
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:25px;
+}
+
+.firebase-status{
+    padding:12px;
+    border-radius:7px;
+    margin-bottom:20px;
+    background:#f1f3f5;
+    font-weight:bold;
+}
+
+@media(max-width:900px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .status{
+        margin-bottom:8px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>ARQAM TUC SHOP</h1>
+
+    <p>Manager Orders Panel</p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- Navigation -->
+
+    <div class="top-buttons">
+
+        <a href="admin.html">
+            ← Admin Panel
+        </a>
+
+        <a href="products.html">
+            🛒 Shop
+        </a>
+
+        <a href="sales.html">
+            💰 Sales
+        </a>
+
+        <a href="purchases.html">
+            🧾 Purchases
+        </a>
+
+        <a href="profit.html">
+            📊 Profit / Loss
+        </a>
+
+    </div>
+
+
+    <!-- Firebase Status -->
+
+    <div
+        class="firebase-status"
+        id="firebase-status">
+
+        🔄 Connecting to Firebase...
+
+    </div>
+
+
+    <!-- Order Summary -->
+
+    <div class="card">
+
+        <h2>📊 Order Summary</h2>
+
+        <br>
+
+        <div class="stats">
+
+
+            <div class="stat">
+
+                Total Orders
+
+                <strong id="total-orders">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat pending">
+
+                Pending Orders
+
+                <strong id="pending-orders">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat sales">
+
+                Total Sales
+
+                <strong id="total-sales">
+                    Rs. 0
+                </strong>
+
+            </div>
+
+
+            <div class="stat stock">
+
+                Total Products
+
+                <strong id="total-products">
+                    0
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- Orders -->
+
+    <div class="card">
+
+        <h2>📦 Customer Orders</h2>
+
+        <br>
+
+        <button
+            class="clear"
+            onclick="clearAllOrders()">
+
+            🗑️ Clear All Orders
+
+        </button>
+
+
+        <div id="orders-container"></div>
+
+    </div>
+
+
+</div>
+
+
+<script type="module">
+
+/*
+=====================================================
+FIREBASE IMPORT
+=====================================================
+*/
+
+import {
+    db,
+    startFirebase,
+    collection,
+    getDocs,
+    doc,
+    setDoc,
+    updateDoc,
+    deleteDoc
+} from "./firebase.js";
+
+
+let orders = [];
+
+let products = [];
+
+let firebaseConnected = false;
+
+
+/*
+=====================================================
+ADMIN LOGIN CHECK
+=====================================================
+*/
+
+if(
+    sessionStorage.getItem("arqamAdminLoggedIn")
+    !== "true"
+){
+
+    window.location.href = "login.html";
+
+}
+
+
+/*
+=====================================================
+LOCAL DATA
+=====================================================
+*/
+
+function getLocalData(key){
+
+    try{
+
+        const saved =
+            localStorage.getItem(key);
+
+        if(saved){
+
+            const parsed =
+                JSON.parse(saved);
+
+            return Array.isArray(parsed)
+                ? parsed
+                : [];
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "Local data error:",
+            error
+        );
+
+    }
+
+    return [];
+
+}
+
+
+/*
+=====================================================
+SAVE LOCAL DATA
+=====================================================
+*/
+
+function saveLocalData(key,data){
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(data)
+    );
+
+}
+
+
+/*
+=====================================================
+GET PRODUCTS FROM FIREBASE
+=====================================================
+*/
+
+async function loadProducts(){
+
+    try{
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "products"
+                )
+            );
+
+
+        products = [];
+
+
+        snapshot.forEach(
+            productDoc => {
+
+                products.push({
+
+                    id:productDoc.id,
+
+                    ...productDoc.data()
+
+                });
+
+            }
+        );
+
+
+        /*
+            Local copy bhi update.
+        */
+
+        saveLocalData(
+            "arqamProducts",
+            products
+        );
+
+
+        return true;
+
+    }catch(error){
+
+        console.error(
+            "Product loading error:",
+            error
+        );
+
+
+        /*
+            Firebase fail ho to
+            local products use honge.
+        */
+
+        products =
+            getLocalData(
+                "arqamProducts"
+            );
+
+
+        return false;
+
+    }
+
+}
+
+
+/*
+=====================================================
+FIND PRODUCT
+=====================================================
+*/
+
+function findProduct(item){
+
+    if(!item){
+        return null;
+    }
+
+
+    let product = null;
+
+
+    /*
+        Product ID
+    */
+
+    if(
+        item.productId !== undefined &&
+        item.productId !== null
+    ){
+
+        product =
+            products.find(
+                p =>
+                    String(p.id) ===
+                    String(item.productId)
+            );
+
+    }
+
+
+    /*
+        Old ID
+    */
+
+    if(
+        !product &&
+        item.id !== undefined &&
+        item.id !== null
+    ){
+
+        product =
+            products.find(
+                p =>
+                    String(p.id) ===
+                    String(item.id)
+            );
+
+    }
+
+
+    /*
+        Product name fallback
+    */
+
+    if(
+        !product &&
+        item.name
+    ){
+
+        product =
+            products.find(
+                p =>
+                    String(p.name || "")
+                    .trim()
+                    .toLowerCase()
+                    ===
+                    String(item.name || "")
+                    .trim()
+                    .toLowerCase()
+            );
+
+    }
+
+
+    return product;
+
+}
+
+
+/*
+=====================================================
+GET ITEM QUANTITY
+=====================================================
+*/
+
+function getItemQuantity(item){
+
+    return Number(
+        item.quantity ||
+        item.qty ||
+        1
+    );
+
+}
+
+
+/*
+=====================================================
+REDUCE STOCK
+=====================================================
+*/
+
+async function reduceOrderStock(order){
+
+    /*
+        Agar stock pehle hi deduct ho chuka hai
+        to dobara deduction nahi hogi.
+    */
+
+    if(
+        order.stockProcessed === true
+    ){
+
+        return true;
+
+    }
+
+
+    if(
+        !Array.isArray(order.items) ||
+        order.items.length === 0
+    ){
+
+        order.stockProcessed = true;
+
+        return true;
+
+    }
+
+
+    /*
+        Pehle stock check.
+    */
+
+    for(
+        const item
+        of order.items
+    ){
+
+        const product =
+            findProduct(item);
+
+
+        if(!product){
+
+            alert(
+                "Product not found:\n" +
+                (item.name || "Unknown Product")
+            );
+
+            return false;
+
+        }
+
+
+        const quantity =
+            getItemQuantity(item);
+
+
+        const stock =
+            Number(
+                product.stock
+            ) || 0;
+
+
+        if(
+            stock < quantity
+        ){
+
+            alert(
+                "Order cannot be confirmed.\n\n" +
+                "Product: " +
+                product.name +
+                "\nAvailable Stock: " +
+                stock +
+                "\nRequired: " +
+                quantity
+            );
+
+            return false;
+
+        }
+
+    }
+
+
+    /*
+        Ab stock deduct.
+    */
+
+    for(
+        const item
+        of order.items
+    ){
+
+        const product =
+            findProduct(item);
+
+
+        if(!product){
+            continue;
+        }
+
+
+        const quantity =
+            getItemQuantity(item);
+
+
+        product.stock =
+            (
+                Number(
+                    product.stock
+                ) || 0
+            ) - quantity;
+
+
+        /*
+            Firebase product update.
+        */
+
+        if(firebaseConnected){
+
+            await updateDoc(
+                doc(
+                    db,
+                    "products",
+                    String(product.id)
+                ),
+                {
+                    stock:product.stock
+                }
+            );
+
+        }
+
+    }
+
+
+    order.stockProcessed = true;
+
+
+    saveLocalData(
+        "arqamProducts",
+        products
+    );
+
+
+    return true;
+
+}
+
+
+/*
+=====================================================
+RESTORE STOCK
+=====================================================
+*/
+
+async function restoreOrderStock(order){
+
+    /*
+        Agar stock deduct hi nahi hua
+        to restore nahi karna.
+    */
+
+    if(
+        order.stockProcessed !== true
+    ){
+
+        return true;
+
+    }
+
+
+    if(
+        !Array.isArray(order.items)
+    ){
+
+        order.stockProcessed = false;
+
+        return true;
+
+    }
+
+
+    for(
+        const item
+        of order.items
+    ){
+
+        const product =
+            findProduct(item);
+
+
+        if(!product){
+            continue;
+        }
+
+
+        const quantity =
+            getItemQuantity(item);
+
+
+        product.stock =
+            (
+                Number(
+                    product.stock
+                ) || 0
+            ) + quantity;
+
+
+        /*
+            Firebase product update.
+        */
+
+        if(firebaseConnected){
+
+            await updateDoc(
+                doc(
+                    db,
+                    "products",
+                    String(product.id)
+                ),
+                {
+                    stock:product.stock
+                }
+            );
+
+        }
+
+    }
+
+
+    order.stockProcessed = false;
+
+
+    saveLocalData(
+        "arqamProducts",
+        products
+    );
+
+
+    return true;
+
+}
+
+
+/*
+=====================================================
+LOAD ORDERS FROM FIREBASE
+=====================================================
+*/
+
+async function loadOrders(){
+
+    try{
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "orders"
+                )
+            );
+
+
+        orders = [];
+
+
+        snapshot.forEach(
+            orderDoc => {
+
+                orders.push({
+
+                    id:orderDoc.id,
+
+                    ...orderDoc.data()
+
+                });
+
+            }
+        );
+
+
+        /*
+            Newest orders first.
+        */
+
+        orders.sort(
+            (a,b) => {
+
+                const aId =
+                    Number(a.id) || 0;
+
+                const bId =
+                    Number(b.id) || 0;
+
+                return bId - aId;
+
+            }
+        );
+
+
+        saveLocalData(
+            "arqamOrders",
+            orders
+        );
+
+
+        displayOrders();
+
+
+    }catch(error){
+
+        console.error(
+            "Firebase order loading error:",
+            error
+        );
+
+
+        /*
+            Backup:
+            local orders.
+        */
+
+        orders =
+            getLocalData(
+                "arqamOrders"
+            );
+
+
+        displayOrders();
+
+    }
+
+}
+
+
+/*
+=====================================================
+DISPLAY ORDERS
+=====================================================
+*/
+
+function displayOrders(){
+
+    const container =
+        document.getElementById(
+            "orders-container"
+        );
+
+
+    container.innerHTML = "";
+
+
+    let totalSales = 0;
+
+    let pending = 0;
+
+
+    /*
+        Orders already loaded in global array.
+    */
+
+    orders.forEach(
+        order => {
+
+            const status =
+                order.status ||
+                "Pending";
+
+
+            /*
+                Sirf Confirmed aur Delivered
+                sales mein count honge.
+            */
+
+            if(
+                status === "Confirmed" ||
+                status === "Delivered"
+            ){
+
+                totalSales +=
+                    Number(
+                        order.total
+                    ) || 0;
+
+            }
+
+
+            if(
+                status === "Pending"
+            ){
+
+                pending++;
+
+            }
+
+
+            let itemsHTML = "";
+
+
+            if(
+                Array.isArray(order.items)
+            ){
+
+                order.items.forEach(
+                    item => {
+
+                        const quantity =
+                            getItemQuantity(item);
+
+
+                        const price =
+                            Number(
+                                item.price
+                            ) || 0;
+
+
+                        const itemTotal =
+                            price * quantity;
+
+
+                        itemsHTML += `
+
+                            <div class="item-row">
+
+                                <strong>
+                                    ${escapeHTML(
+                                        item.name ||
+                                        "Product"
+                                    )}
+                                </strong>
+
+                                × ${quantity}
+
+                                — Rs.
+                                ${itemTotal.toLocaleString()}
+
+                            </div>
+
+                        `;
+
+                    }
+                );
+
+            }
+
+
+            let stockMessage = "";
+
+
+            if(
+                status === "Confirmed"
+            ){
+
+                stockMessage = `
+
+                    <div class="stock-info">
+
+                        📦 Stock deducted successfully
+                        for this order.
+
+                    </div>
+
+                `;
+
+            }
+
+
+            if(
+                status === "Delivered"
+            ){
+
+                stockMessage = `
+
+                    <div class="stock-info">
+
+                        ✅ Order delivered.
+                        Stock was already deducted.
+
+                    </div>
+
+                `;
+
+            }
+
+
+            if(
+                status === "Cancelled"
+            ){
+
+                stockMessage = `
+
+                    <div class="stock-info cancelled-info">
+
+                        ❌ Order cancelled.
+                        Product stock has been restored
+                        if it was previously deducted.
+
+                    </div>
+
+                `;
+
+            }
+
+
+            if(
+                status === "Pending"
+            ){
+
+                stockMessage = `
+
+                    <div class="stock-info warning-info">
+
+                        ⏳ Pending order.
+                        Stock will be deducted when
+                        order is confirmed.
+
+                    </div>
+
+                `;
+
+            }
+
+
+            const orderHTML = `
+
+                <div class="order">
+
+                    <h3>
+                        Order #${escapeHTML(
+                            String(order.id)
+                        )}
+                    </h3>
+
+
+                    <p>
+
+                        <strong>
+                            Customer:
+                        </strong>
+
+                        ${escapeHTML(
+                            order.name || "-"
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Mobile:
+                        </strong>
+
+                        ${escapeHTML(
+                            order.phone || "-"
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Address:
+                        </strong>
+
+                        ${escapeHTML(
+                            order.address || "-"
+                        )}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Date:
+                        </strong>
+
+                        ${escapeHTML(
+                            order.date || "-"
+                        )}
+
+                    </p>
+
+
+                    <div class="items">
+
+                        <strong>
+                            Products:
+                        </strong>
+
+                        <br><br>
+
+                        ${
+                            itemsHTML ||
+                            "No products"
+                        }
+
+                    </div>
+
+
+                    <p>
+
+                        <strong>
+                            Total:
+                        </strong>
+
+                        Rs.
+                        ${(
+                            Number(
+                                order.total
+                            ) || 0
+                        ).toLocaleString()}
+
+                    </p>
+
+
+                    ${stockMessage}
+
+
+                    <br>
+
+
+                    <select
+                        class="status"
+                        onchange="changeStatus(
+                            '${escapeAttribute(
+                                String(order.id)
+                            )}',
+                            this.value
+                        )">
+
+                        <option
+                            value="Pending"
+                            ${
+                                status === "Pending"
+                                ? "selected"
+                                : ""
+                            }
+                        >
+                            Pending
+                        </option>
+
+
+                        <option
+                            value="Confirmed"
+                            ${
+                                status === "Confirmed"
+                                ? "selected"
+                                : ""
+                            }
+                        >
+                            Confirmed
+                        </option>
+
+
+                        <option
+                            value="Delivered"
+                            ${
+                                status === "Delivered"
+                                ? "selected"
+                                : ""
+                            }
+                        >
+                            Delivered
+                        </option>
+
+
+                        <option
+                            value="Cancelled"
+                            ${
+                                status === "Cancelled"
+                                ? "selected"
+                                : ""
+                            }
+                        >
+                            Cancelled
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        class="delete"
+                        onclick="deleteOrder(
+                            '${escapeAttribute(
+                                String(order.id)
+                            )}'
+                        )">
+
+                        Delete
+
+                    </button>
+
+
+                </div>
+
+            `;
+
+
+            container.innerHTML +=
+                orderHTML;
+
+        }
+    );
+
+
+    if(
+        orders.length === 0
+    ){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                No orders yet.
+
+            </div>
+
+        `;
+
+    }
+
+
+    document.getElementById(
+        "total-orders"
+    ).innerText =
+        orders.length;
+
+
+    document.getElementById(
+        "pending-orders"
+    ).innerText =
+        pending;
+
+
+    document.getElementById(
+        "total-sales"
+    ).innerText =
+        "Rs. " +
+        totalSales.toLocaleString();
+
+
+    document.getElementById(
+        "total-products"
+    ).innerText =
+        products.length;
+
+}
+
+
+/*
+=====================================================
+CHANGE STATUS
+=====================================================
+*/
+
+window.changeStatus =
+async function(id,newStatus){
+
+    const order =
+        orders.find(
+            order =>
+                String(order.id) ===
+                String(id)
+        );
+
+
+    if(!order){
+
+        alert(
+            "Order not found."
+        );
+
+        return;
+
+    }
+
+
+    const oldStatus =
+        order.status ||
+        "Pending";
+
+
+    /*
+        Same status.
+    */
+
+    if(
+        oldStatus === newStatus
+    ){
+
+        displayOrders();
+
+        return;
+
+    }
+
+
+    try{
+
+        /*
+            CONFIRMED
+        */
+
+        if(
+            newStatus === "Confirmed"
+        ){
+
+            const success =
+                await reduceOrderStock(
+                    order
+                );
+
+
+            if(!success){
+
+                displayOrders();
+
+                return;
+
+            }
+
+        }
+
+
+        /*
+            CANCELLED
+        */
+
+        if(
+            newStatus === "Cancelled"
+        ){
+
+            await restoreOrderStock(
+                order
+            );
+
+        }
+
+
+        /*
+            Cancelled -> Confirmed
+        */
+
+        if(
+            oldStatus === "Cancelled" &&
+            newStatus === "Confirmed"
+        ){
+
+            const success =
+                await reduceOrderStock(
+                    order
+                );
+
+
+            if(!success){
+
+                displayOrders();
+
+                return;
+
+            }
+
+        }
+
+
+        order.status =
+            newStatus;
+
+
+        /*
+            Firebase save.
+        */
+
+        if(firebaseConnected){
+
+            await setDoc(
+                doc(
+                    db,
+                    "orders",
+                    String(order.id)
+                ),
+                order
+            );
+
+        }
+
+
+        /*
+            Local backup.
+        */
+
+        saveLocalData(
+            "arqamOrders",
+            orders
+        );
+
+
+        displayOrders();
+
+
+        alert(
+            "✅ Order status updated successfully!"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Status update error:",
+            error
+        );
+
+
+        alert(
+            "❌ Order update failed.\n\n" +
+            "Please check Firebase connection."
+        );
+
+
+        await loadOrders();
+
+    }
+
+};
+
+
+/*
+=====================================================
+DELETE ORDER
+=====================================================
+*/
+
+window.deleteOrder =
+async function(id){
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this order?\n\n" +
+            "If stock was deducted, it will be restored."
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    const order =
+        orders.find(
+            order =>
+                String(order.id) ===
+                String(id)
+        );
+
+
+    if(!order){
+        return;
+    }
+
+
+    try{
+
+        /*
+            Restore stock first.
+        */
+
+        if(
+            order.stockProcessed === true
+        ){
+
+            await restoreOrderStock(
+                order
+            );
+
+        }
+
+
+        /*
+            Delete from Firebase.
+        */
+
+        if(firebaseConnected){
+
+            await deleteDoc(
+                doc(
+                    db,
+                    "orders",
+                    String(order.id)
+                )
+            );
+
+        }
+
+
+        /*
+            Remove from local array.
+        */
+
+        orders =
+            orders.filter(
+                currentOrder =>
+                    String(currentOrder.id)
+                    !==
+                    String(id)
+            );
+
+
+        saveLocalData(
+            "arqamOrders",
+            orders
+        );
+
+
+        displayOrders();
+
+
+        alert(
+            "✅ Order deleted successfully!"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Delete order error:",
+            error
+        );
+
+
+        alert(
+            "❌ Order delete failed."
+        );
+
+    }
+
+};
+
+
+/*
+=====================================================
+CLEAR ALL ORDERS
+=====================================================
+*/
+
+window.clearAllOrders =
+async function(){
+
+    if(
+        orders.length === 0
+    ){
+
+        alert(
+            "There are no orders."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Delete ALL orders?\n\n" +
+            "Any stock already deducted by these orders " +
+            "will be restored."
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    try{
+
+        /*
+            Restore stock.
+        */
+
+        for(
+            const order
+            of orders
+        ){
+
+            if(
+                order.stockProcessed === true
+            ){
+
+                await restoreOrderStock(
+                    order
+                );
+
+            }
+
+        }
+
+
+        /*
+            Delete every Firebase order.
+        */
+
+        if(firebaseConnected){
+
+            for(
+                const order
+                of orders
+            ){
+
+                await deleteDoc(
+                    doc(
+                        db,
+                        "orders",
+                        String(order.id)
+                    )
+                );
+
+            }
+
+        }
+
+
+        orders = [];
+
+
+        saveLocalData(
+            "arqamOrders",
+            orders
+        );
+
+
+        displayOrders();
+
+
+        alert(
+            "✅ All orders deleted and inventory restored!"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Clear orders error:",
+            error
+        );
+
+
+        alert(
+            "❌ Could not clear all orders."
+        );
+
+    }
+
+};
+
+
+/*
+=====================================================
+ESCAPE HTML
+=====================================================
+*/
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttribute(value){
+
+    return String(value)
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'")
+        .replace(/"/g,"&quot;");
+
+}
+
+
+/*
+=====================================================
+START APP
+=====================================================
+*/
+
+async function startApp(){
+
+    try{
+
+        const connected =
+            await startFirebase();
+
+
+        firebaseConnected =
+            connected === true;
+
+
+        if(
+            firebaseConnected
+        ){
+
+            document.getElementById(
+                "firebase-status"
+            ).innerText =
+                "🟢 Firebase connected — Orders are stored in the cloud.";
+
+
+            /*
+                Firebase products first.
+            */
+
+            await loadProducts();
+
+
+            /*
+                Then Firebase orders.
+            */
+
+            await loadOrders();
+
+        }else{
+
+            document.getElementById(
+                "firebase-status"
+            ).innerText =
+                "🟠 Firebase unavailable — using local data.";
+
+
+            products =
+                getLocalData(
+                    "arqamProducts"
+                );
+
+
+            orders =
+                getLocalData(
+                    "arqamOrders"
+                );
+
+
+            displayOrders();
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            "App startup error:",
+            error
+        );
+
+
+        firebaseConnected =
+            false;
+
+
+        products =
+            getLocalData(
+                "arqamProducts"
+            );
+
+
+        orders =
+            getLocalData(
+                "arqamOrders"
+            );
+
+
+        document.getElementById(
+            "firebase-status"
+        ).innerText =
+            "🟠 Firebase error — using local backup.";
+
+
+        displayOrders();
+
+    }
+
+}
+
+
+/*
+=====================================================
+START
+=====================================================
+*/
+
+startApp();
+
+
+/*
+=====================================================
+AUTO REFRESH
+=====================================================
+*/
+
+setInterval(
+    async function(){
+
+        if(
+            firebaseConnected
+        ){
+
+            await loadProducts();
+
+            await loadOrders();
+
+        }else{
+
+            products =
+                getLocalData(
+                    "arqamProducts"
+                );
+
+            orders =
+                getLocalData(
+                    "arqamOrders"
+                );
+
+            displayOrders();
+
+        }
+
+    },
+    5000
+);
+
+</script>
+
+</body>
+</html>

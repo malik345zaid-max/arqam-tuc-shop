@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arqam TUC Shop - Manager Login</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#eaf7ef,#ffffff,#e8f4ff);
+}
+
+.login-box{
+    width:380px;
+    max-width:92%;
+    background:white;
+    padding:35px;
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,.12);
+}
+
+.logo{
+    text-align:center;
+    font-size:28px;
+    font-weight:bold;
+    color:#16733b;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:28px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin:15px 0 7px;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    margin-top:22px;
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    background:#16733b;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#0f5c2d;
+}
+
+.error{
+    color:#d62828;
+    text-align:center;
+    margin-top:15px;
+    display:none;
+    font-weight:bold;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    color:#16733b;
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">ARQAM TUC SHOP</div>
+
+    <div class="subtitle">
+        Manager Panel Login
+    </div>
+
+    <label>Username</label>
+    <input type="text" id="username" placeholder="Enter username">
+
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Enter password">
+
+    <button onclick="login()">LOGIN</button>
+
+    <div class="error" id="error">
+        Incorrect username or password
+    </div>
+
+    <a href="products.html" class="back">
+        ← Back to Shop
+    </a>
+
+</div>
+
+<script>
+
+function login(){
+
+    const username =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    /*
+       TEMPORARY LOCAL LOGIN
+       Real secure authentication will be added
+       when we connect the online database.
+    */
+
+    if(username === "admin" && password === "12345"){
+
+        sessionStorage.setItem("arqamAdminLoggedIn","true");
+
+        window.location.href = "admin.html";
+
+    }else{
+
+        document.getElementById("error").style.display = "block";
+
+    }
+}
+
+document.getElementById("password").addEventListener("keydown",function(event){
+
+    if(event.key === "Enter"){
+        login();
+    }
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arqam TUC Shop - Purchases</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+}
+
+header {
+    background: #198754;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 6px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+button,
+.btn {
+    border: none;
+    padding: 11px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    background: #0b5ed7;
+    font-size: 14px;
+}
+
+button:hover,
+.btn:hover {
+    opacity: 0.85;
+}
+
+.danger {
+    background: #dc3545;
+}
+
+.green {
+    background: #198754;
+}
+
+.orange {
+    background: #fd7e14;
+}
+
+.form-box,
+.table-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.save-btn {
+    background: #198754;
+    width: 100%;
+    font-weight: bold;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 28px;
+    font-weight: bold;
+    color: #198754;
+}
+
+.info {
+    background: #e7f5ec;
+    color: #146c43;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.table-box {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #f1f5f9;
+}
+
+.delete-btn {
+    background: #dc3545;
+    padding: 7px 10px;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.stock-added {
+    color: #198754;
+    font-weight: bold;
+}
+
+.warning {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+@media (max-width: 700px) {
+
+    .form-grid,
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>ARQAM TUC SHOP</h1>
+    <p>Purchase & Stock Buying Management</p>
+</header>
+
+<div class="container">
+
+    <div class="buttons">
+
+        <a href="admin.html" class="btn">
+            ← Admin Panel
+        </a>
+
+        <a href="sales.html" class="btn">
+            💰 Sales
+        </a>
+
+        <a href="products.html" class="btn green">
+            🛍️ Shop
+        </a>
+
+        <a href="orders.html" class="btn orange">
+            🛒 Orders
+        </a>
+
+        <a href="profit.html" class="btn">
+            📊 Profit / Loss
+        </a>
+
+    </div>
+
+
+    <div class="info">
+
+        <strong>Inventory Connected:</strong>
+
+        When you add a purchase, the purchased quantity is automatically
+        added to the matching product's stock.
+
+        <br>
+
+        When a purchase is deleted, that quantity is automatically removed
+        from the product stock.
+
+    </div>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>Total Purchase Cost</h3>
+
+            <p id="totalPurchase">
+                Rs. 0
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Total Items Purchased</h3>
+
+            <p id="totalItems">
+                0
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="form-box">
+
+        <h2>Add Purchase</h2>
+
+        <div class="form-grid">
+
+            <input
+                type="text"
+                id="productName"
+                placeholder="Product Name"
+            >
+
+            <input
+                type="text"
+                id="supplier"
+                placeholder="Supplier Name"
+            >
+
+            <input
+                type="number"
+                id="quantity"
+                placeholder="Quantity"
+                min="1"
+            >
+
+            <input
+                type="number"
+                id="cost"
+                placeholder="Total Purchase Cost (Rs.)"
+                min="0"
+            >
+
+            <input
+                type="date"
+                id="purchaseDate"
+            >
+
+            <input
+                type="text"
+                id="note"
+                placeholder="Note (Optional)"
+            >
+
+            <div class="full">
+
+                <button
+                    class="save-btn"
+                    onclick="addPurchase()">
+
+                    + Add Purchase
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-box">
+
+        <h2>Purchase Records</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Product</th>
+
+                    <th>Supplier</th>
+
+                    <th>Quantity</th>
+
+                    <th>Cost</th>
+
+                    <th>Date</th>
+
+                    <th>Note</th>
+
+                    <th>Stock</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="purchaseTable"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ========================================
+// PURCHASE FUNCTIONS
+// ========================================
+
+function getPurchases() {
+
+    const saved =
+        localStorage.getItem("arqamPurchases");
+
+    if (!saved) {
+        return [];
+    }
+
+    try {
+
+        const purchases = JSON.parse(saved);
+
+        return Array.isArray(purchases)
+            ? purchases
+            : [];
+
+    } catch (error) {
+
+        console.error("Purchase data error:", error);
+
+        return [];
+
+    }
+}
+
+
+function savePurchases(purchases) {
+
+    localStorage.setItem(
+        "arqamPurchases",
+        JSON.stringify(purchases)
+    );
+
+}
+
+
+// ========================================
+// PRODUCT FUNCTIONS
+// ========================================
+
+function getProducts() {
+
+    const saved =
+        localStorage.getItem("arqamProducts");
+
+    if (!saved) {
+        return [];
+    }
+
+    try {
+
+        const products = JSON.parse(saved);
+
+        return Array.isArray(products)
+            ? products
+            : [];
+
+    } catch (error) {
+
+        console.error("Product data error:", error);
+
+        return [];
+
+    }
+
+}
+
+
+function saveProducts(products) {
+
+    localStorage.setItem(
+        "arqamProducts",
+        JSON.stringify(products)
+    );
+
+}
+
+
+// ========================================
+// FIND PRODUCT
+// ========================================
+
+function findProduct(productName) {
+
+    const products = getProducts();
+
+    return products.find(product =>
+
+        String(product.name || "")
+            .trim()
+            .toLowerCase() ===
+        String(productName || "")
+            .trim()
+            .toLowerCase()
+
+    );
+
+}
+
+
+// ========================================
+// ADD PURCHASE
+// ========================================
+
+function addPurchase() {
+
+    const productName =
+        document
+            .getElementById("productName")
+            .value
+            .trim();
+
+
+    const supplier =
+        document
+            .getElementById("supplier")
+            .value
+            .trim();
+
+
+    const quantity =
+        Number(
+            document
+                .getElementById("quantity")
+                .value
+        );
+
+
+    const cost =
+        Number(
+            document
+                .getElementById("cost")
+                .value
+        );
+
+
+    const purchaseDate =
+        document
+            .getElementById("purchaseDate")
+            .value;
+
+
+    const note =
+        document
+            .getElementById("note")
+            .value
+            .trim();
+
+
+    // ========================================
+    // VALIDATION
+    // ========================================
+
+    if (
+        !productName ||
+        !supplier ||
+        !quantity ||
+        quantity < 1 ||
+        cost < 0 ||
+        !purchaseDate
+    ) {
+
+        alert(
+            "Please fill all required fields correctly."
+        );
+
+        return;
+
+    }
+
+
+    // ========================================
+    // CHECK PRODUCT
+    // ========================================
+
+    const products = getProducts();
+
+    const productIndex = products.findIndex(product =>
+
+        String(product.name || "")
+            .trim()
+            .toLowerCase() ===
+        productName
+            .trim()
+            .toLowerCase()
+
+    );
+
+
+    if (productIndex === -1) {
+
+        alert(
+            "Product not found in Shop.\n\n" +
+            "Please first add this product in Shop / Products."
+        );
+
+        return;
+
+    }
+
+
+    // ========================================
+    // ADD STOCK
+    // ========================================
+
+    const oldStock =
+        Number(products[productIndex].stock) || 0;
+
+
+    products[productIndex].stock =
+        oldStock + quantity;
+
+
+    saveProducts(products);
+
+
+    // ========================================
+    // CREATE PURCHASE
+    // ========================================
+
+    const purchases = getPurchases();
+
+
+    const purchase = {
+
+        id: Date.now(),
+
+        productName: productName,
+
+        productId:
+            products[productIndex].id,
+
+        supplier: supplier,
+
+        quantity: quantity,
+
+        cost: cost,
+
+        date: purchaseDate,
+
+        note: note,
+
+        stockAdded: true
+
+    };
+
+
+    purchases.push(purchase);
+
+
+    savePurchases(purchases);
+
+
+    // ========================================
+    // SUCCESS
+    // ========================================
+
+    alert(
+        "Purchase added successfully!\n\n" +
+        "Stock increased by " +
+        quantity +
+        " item(s)."
+    );
+
+
+    // Clear form
+
+    document.getElementById("productName").value = "";
+
+    document.getElementById("supplier").value = "";
+
+    document.getElementById("quantity").value = "";
+
+    document.getElementById("cost").value = "";
+
+    document.getElementById("purchaseDate").value = "";
+
+    document.getElementById("note").value = "";
+
+
+    loadPurchases();
+
+}
+
+
+// ========================================
+// DELETE PURCHASE
+// ========================================
+
+function deletePurchase(id) {
+
+    const confirmDelete = confirm(
+        "Delete this purchase record?\n\n" +
+        "The purchased quantity will also be removed from stock."
+    );
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    let purchases = getPurchases();
+
+
+    const purchase =
+        purchases.find(
+            item => String(item.id) === String(id)
+        );
+
+
+    if (!purchase) {
+
+        alert("Purchase record not found.");
+
+        return;
+
+    }
+
+
+    // ========================================
+    // RESTORE / REMOVE STOCK
+    // ========================================
+
+    if (purchase.stockAdded === true) {
+
+        const products = getProducts();
+
+
+        const productIndex =
+            products.findIndex(product => {
+
+                if (
+                    purchase.productId !== undefined &&
+                    String(product.id) ===
+                    String(purchase.productId)
+                ) {
+                    return true;
+                }
+
+
+                return String(product.name || "")
+                    .trim()
+                    .toLowerCase() ===
+                    String(purchase.productName || "")
+                        .trim()
+                        .toLowerCase();
+
+            });
+
+
+        if (productIndex !== -1) {
+
+            const currentStock =
+                Number(products[productIndex].stock) || 0;
+
+
+            const purchaseQuantity =
+                Number(purchase.quantity) || 0;
+
+
+            products[productIndex].stock =
+                Math.max(
+                    0,
+                    currentStock - purchaseQuantity
+                );
+
+
+            saveProducts(products);
+
+        }
+
+    }
+
+
+    // ========================================
+    // DELETE RECORD
+    // ========================================
+
+    purchases =
+        purchases.filter(
+            item =>
+                String(item.id) !== String(id)
+        );
+
+
+    savePurchases(purchases);
+
+
+    alert(
+        "Purchase deleted successfully."
+    );
+
+
+    loadPurchases();
+
+}
+
+
+// ========================================
+// LOAD PURCHASES
+// ========================================
+
+function loadPurchases() {
+
+    const purchases = getPurchases();
+
+
+    let totalCost = 0;
+
+    let totalItems = 0;
+
+
+    purchases.forEach(purchase => {
+
+        totalCost +=
+            Number(purchase.cost) || 0;
+
+
+        totalItems +=
+            Number(purchase.quantity) || 0;
+
+    });
+
+
+    // ========================================
+    // DASHBOARD CARDS
+    // ========================================
+
+    document.getElementById(
+        "totalPurchase"
+    ).textContent =
+        "Rs. " +
+        totalCost.toLocaleString();
+
+
+    document.getElementById(
+        "totalItems"
+    ).textContent =
+        totalItems.toLocaleString();
+
+
+    // ========================================
+    // TABLE
+    // ========================================
+
+    const table =
+        document.getElementById(
+            "purchaseTable"
+        );
+
+
+    table.innerHTML = "";
+
+
+    if (purchases.length === 0) {
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="8"
+                    class="empty">
+
+                    No purchase records yet.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    purchases
+        .slice()
+        .reverse()
+        .forEach(purchase => {
+
+
+            const product =
+                findProduct(
+                    purchase.productName
+                );
+
+
+            const currentStock =
+                product
+                    ? Number(product.stock) || 0
+                    : null;
+
+
+            const stockText =
+                currentStock === null
+                    ? `<span class="warning">
+                        Product not found
+                       </span>`
+                    : `<span class="stock-added">
+                        ${currentStock}
+                      </span>`;
+
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${purchase.productName}
+                    </strong>
+                </td>
+
+                <td>
+                    ${purchase.supplier}
+                </td>
+
+                <td>
+                    ${purchase.quantity}
+                </td>
+
+                <td>
+                    <strong>
+                        Rs.
+                        ${Number(
+                            purchase.cost
+                        ).toLocaleString()}
+                    </strong>
+                </td>
+
+                <td>
+                    ${purchase.date}
+                </td>
+
+                <td>
+                    ${purchase.note || "-"}
+                </td>
+
+                <td>
+                    ${stockText}
+                </td>
+
+                <td>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deletePurchase('${purchase.id}')">
+
+                        Delete
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+}
+
+
+// ========================================
+// AUTO REFRESH
+// ========================================
+
+loadPurchases();
+
+
+window.addEventListener(
+    "storage",
+    function(event) {
+
+        if (
+            event.key === "arqamPurchases" ||
+            event.key === "arqamProducts"
+        ) {
+
+            loadPurchases();
+
+        }
+
+    }
+);
+
+
+// Refresh every 2 seconds
+
+setInterval(
+    loadPurchases,
+    2000
+);
+
+</script>
+
+</body>
+</html>
