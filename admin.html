@@ -58,21 +58,10 @@ header h1{
     opacity:.85;
 }
 
-.green{
-    background:#198754;
-}
-
-.orange{
-    background:#fd7e14;
-}
-
-.purple{
-    background:#6f42c1;
-}
-
-.red{
-    background:#dc3545;
-}
+.green{background:#198754}
+.orange{background:#fd7e14}
+.purple{background:#6f42c1}
+.red{background:#dc3545}
 
 .cards{
     display:grid;
@@ -176,12 +165,6 @@ header h1{
     text-align:center;
     border-radius:10px;
     font-weight:bold;
-    transition:.2s;
-}
-
-.quick-link:hover{
-    background:#e2e8f0;
-    transform:translateY(-2px);
 }
 
 .form-grid{
@@ -211,10 +194,6 @@ button{
     background:#0b5ed7;
     color:white;
     font-size:14px;
-}
-
-button:hover{
-    opacity:.85;
 }
 
 .save{
@@ -306,7 +285,6 @@ th{
 }
 
 @media(max-width:1000px){
-
     .cards{
         grid-template-columns:repeat(2,1fr);
     }
@@ -317,7 +295,6 @@ th{
 }
 
 @media(max-width:650px){
-
     .cards,
     .form-grid,
     .quick-links{
@@ -342,248 +319,217 @@ th{
 <body>
 
 <header>
-
     <h1>ARQAM TUC SHOP</h1>
-
     <p>Manager / Admin Dashboard</p>
-
 </header>
 
 <div class="container">
 
-    <!-- NAVIGATION -->
-
-    <div class="top-buttons">
-
-        <a href="products.html" class="btn">
-            🛍️ Shop
-        </a>
-
-        <a href="orders.html" class="btn">
-            🛒 Orders
-        </a>
-
-        <a href="sales.html" class="btn green">
-            💰 Sales
-        </a>
-
-        <a href="purchases.html" class="btn orange">
-            🧾 Purchases
-        </a>
-
-        <a href="profit.html" class="btn purple">
-            📊 Profit / Loss
-        </a>
-
-        <button
-            class="btn logout-btn"
-            onclick="logoutAdmin()">
-            🔒 Logout
-        </button>
-
-    </div>
-
-
-    <!-- FIREBASE STATUS -->
-
-    <div
-        class="status-box"
-        id="firebaseStatus">
-        🔄 Connecting to Firebase...
-    </div>
-
-
-    <!-- DASHBOARD -->
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Total Products</h3>
-            <p id="totalProducts">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Orders</h3>
-            <p id="totalOrders">0</p>
-        </div>
-
-        <div class="card pending">
-            <h3>Pending Orders</h3>
-            <p id="pendingOrders">0</p>
-        </div>
-
-        <div class="card sales">
-            <h3>Total Sales</h3>
-            <p id="totalSales">Rs. 0</p>
-        </div>
-
-        <div class="card purchase">
-            <h3>Total Purchases</h3>
-            <p id="totalPurchases">Rs. 0</p>
-        </div>
-
-        <div class="card stock">
-            <h3>Current Stock</h3>
-            <p id="currentStock">0</p>
-        </div>
-
-        <div class="card profit">
-            <h3>Profit</h3>
-            <p id="totalProfit">Rs. 0</p>
-        </div>
-
-        <div class="card loss">
-            <h3>Loss</h3>
-            <p id="totalLoss">Rs. 0</p>
-        </div>
-
-    </div>
-
-
-    <!-- QUICK ACCESS -->
-
-    <div class="section">
-
-        <h2>⚡ Quick Access</h2>
-
-        <div class="quick-links">
-
-            <a href="products.html" class="quick-link">
-                🛍️ Products
-            </a>
-
-            <a href="orders.html" class="quick-link">
-                🛒 Orders
-            </a>
-
-            <a href="sales.html" class="quick-link">
-                💰 Sales
-            </a>
-
-            <a href="purchases.html" class="quick-link">
-                🧾 Purchases
-            </a>
-
-            <a href="profit.html" class="quick-link">
-                📊 Profit / Loss
-            </a>
-
-        </div>
-
-    </div>
-
-
-    <!-- PRODUCT FORM -->
-
-    <div class="section">
-
-        <h2 id="formTitle">
-            Add New Product
-        </h2>
-
-        <p style="color:#666;margin-top:5px;">
-            Add or update products available in Arqam TUC Shop.
-        </p>
-
-        <div class="form-grid">
-
-            <input
-                type="text"
-                id="productName"
-                placeholder="Product Name">
-
-            <input
-                type="text"
-                id="productCategory"
-                placeholder="Category">
-
-            <input
-                type="number"
-                id="productPrice"
-                placeholder="Selling Price (Rs.)"
-                min="0">
-
-            <input
-                type="number"
-                id="productStock"
-                placeholder="Stock Quantity"
-                min="0">
-
-            <input
-                type="text"
-                id="productImage"
-                placeholder="Image URL">
-
-            <div></div>
-
-            <div class="full">
-
-                <button
-                    class="save"
-                    onclick="saveProduct()"
-                    id="saveButton">
-                    + Add Product
-                </button>
-
-                <button
-                    class="cancel hidden"
-                    onclick="cancelEdit()"
-                    id="cancelButton">
-                    Cancel Edit
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="info-box">
-
-            💡 <strong>Cloud Stock:</strong>
-            Products are now stored in Firebase Firestore.
-
-        </div>
-
-    </div>
-
-
-    <!-- PRODUCTS -->
-
-    <div class="section table-box">
-
-        <h2>📦 Product Management</h2>
-
-        <table>
-
-            <thead>
-
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Actions</th>
-                </tr>
-
-            </thead>
-
-            <tbody id="productTable"></tbody>
-
-        </table>
-
-    </div>
+<div class="top-buttons">
+
+<a href="products.html" class="btn">
+🛍️ Shop
+</a>
+
+<a href="orders.html" class="btn">
+🛒 Orders
+</a>
+
+<a href="sales.html" class="btn green">
+💰 Sales
+</a>
+
+<a href="purchases.html" class="btn orange">
+🧾 Purchases
+</a>
+
+<a href="profit.html" class="btn purple">
+📊 Profit / Loss
+</a>
+
+<button class="btn logout-btn" id="logoutButton">
+🔒 Logout
+</button>
 
 </div>
 
+<div class="status-box" id="firebaseStatus">
+🔄 Checking manager authentication...
+</div>
 
-<!-- FIREBASE -->
+<div class="cards">
+
+<div class="card">
+<h3>Total Products</h3>
+<p id="totalProducts">0</p>
+</div>
+
+<div class="card">
+<h3>Total Orders</h3>
+<p id="totalOrders">0</p>
+</div>
+
+<div class="card pending">
+<h3>Pending Orders</h3>
+<p id="pendingOrders">0</p>
+</div>
+
+<div class="card sales">
+<h3>Total Sales</h3>
+<p id="totalSales">Rs. 0</p>
+</div>
+
+<div class="card purchase">
+<h3>Total Purchases</h3>
+<p id="totalPurchases">Rs. 0</p>
+</div>
+
+<div class="card stock">
+<h3>Current Stock</h3>
+<p id="currentStock">0</p>
+</div>
+
+<div class="card profit">
+<h3>Profit</h3>
+<p id="totalProfit">Rs. 0</p>
+</div>
+
+<div class="card loss">
+<h3>Loss</h3>
+<p id="totalLoss">Rs. 0</p>
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>⚡ Quick Access</h2>
+
+<div class="quick-links">
+
+<a href="products.html" class="quick-link">
+🛍️ Products
+</a>
+
+<a href="orders.html" class="quick-link">
+🛒 Orders
+</a>
+
+<a href="sales.html" class="quick-link">
+💰 Sales
+</a>
+
+<a href="purchases.html" class="quick-link">
+🧾 Purchases
+</a>
+
+<a href="profit.html" class="quick-link">
+📊 Profit / Loss
+</a>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2 id="formTitle">
+Add New Product
+</h2>
+
+<p style="color:#666;margin-top:5px;">
+Add or update products available in Arqam TUC Shop.
+</p>
+
+<div class="form-grid">
+
+<input
+type="text"
+id="productName"
+placeholder="Product Name">
+
+<input
+type="text"
+id="productCategory"
+placeholder="Category">
+
+<input
+type="number"
+id="productPrice"
+placeholder="Selling Price (Rs.)"
+min="0">
+
+<input
+type="number"
+id="productStock"
+placeholder="Stock Quantity"
+min="0">
+
+<input
+type="text"
+id="productImage"
+placeholder="Image URL">
+
+<div></div>
+
+<div class="full">
+
+<button
+class="save"
+id="saveButton">
++ Add Product
+</button>
+
+<button
+class="cancel hidden"
+id="cancelButton">
+Cancel Edit
+</button>
+
+</div>
+
+</div>
+
+<div class="info-box">
+💡 <strong>Cloud Stock:</strong>
+Products are stored in Firebase Firestore.
+</div>
+
+</div>
+
+<div class="section table-box">
+
+<h2>📦 Product Management</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Image</th>
+<th>Name</th>
+<th>Category</th>
+<th>Price</th>
+<th>Stock</th>
+<th>Actions</th>
+</tr>
+
+</thead>
+
+<tbody id="productTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
 
 <script type="module">
 
 import {
     db,
     auth,
-    startFirebase,
     collection,
     getDocs,
     setDoc,
@@ -592,40 +538,77 @@ import {
     deleteDoc
 } from "./firebase.js";
 
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
 
 let products = [];
-
 let editIndex = -1;
+let managerReady = false;
 
 
 /* =========================
-   ADMIN LOGIN CHECK
+   AUTHENTICATION
 ========================= */
 
-if(
-    sessionStorage.getItem("arqamAdminLoggedIn")
-    !== "true"
-){
+onAuthStateChanged(auth, async function(user){
 
-    window.location.href = "login.html";
+    if(!user){
 
-}
+        window.location.href = "login.html";
+
+        return;
+
+    }
+
+
+    managerReady = true;
+
+
+    document.getElementById(
+        "firebaseStatus"
+    ).textContent =
+        "🟢 Manager authenticated — Firebase connected.";
+
+
+    await loadProducts();
+
+    updateDashboard();
+
+});
 
 
 /* =========================
    LOGOUT
 ========================= */
 
-window.logoutAdmin = function(){
+document
+.getElementById("logoutButton")
+.addEventListener("click",async function(){
 
-    sessionStorage.removeItem(
-        "arqamAdminLoggedIn"
-    );
+    try{
 
-    window.location.href =
-        "login.html";
+        await signOut(auth);
 
-};
+        sessionStorage.removeItem(
+            "arqamAdminLoggedIn"
+        );
+
+        window.location.href =
+            "login.html";
+
+    }catch(error){
+
+        alert(
+            "Logout failed: " +
+            error.message
+        );
+
+    }
+
+});
 
 
 /* =========================
@@ -636,23 +619,21 @@ function getLocalData(key){
 
     try{
 
-        const saved =
+        const data =
             localStorage.getItem(key);
 
-        if(!saved){
+        if(!data){
             return [];
         }
 
         const parsed =
-            JSON.parse(saved);
+            JSON.parse(data);
 
         return Array.isArray(parsed)
             ? parsed
             : [];
 
     }catch(error){
-
-        console.error(error);
 
         return [];
 
@@ -662,10 +643,15 @@ function getLocalData(key){
 
 
 /* =========================
-   FIREBASE PRODUCTS
+   LOAD PRODUCTS
 ========================= */
 
-async function loadFirebaseProducts(){
+async function loadProducts(){
+
+    if(!managerReady){
+        return;
+    }
+
 
     try{
 
@@ -677,125 +663,22 @@ async function loadFirebaseProducts(){
                 )
             );
 
-        const firebaseProducts = [];
-
-        snapshot.forEach(
-            productDoc => {
-
-                firebaseProducts.push({
-
-                    id: productDoc.id,
-
-                    ...productDoc.data()
-
-                });
-
-            }
-        );
-
-
-        /*
-            IF FIREBASE IS EMPTY,
-            MIGRATE EXISTING LOCAL PRODUCTS.
-        */
-
-        if(firebaseProducts.length === 0){
-
-            const localProducts =
-                getLocalData(
-                    "arqamProducts"
-                );
-
-
-            if(localProducts.length > 0){
-
-                for(
-                    const product
-                    of localProducts
-                ){
-
-                    const productId =
-                        String(
-                            product.id ||
-                            Date.now()
-                        );
-
-
-                    await setDoc(
-                        doc(
-                            db,
-                            "products",
-                            productId
-                        ),
-                        {
-
-                            name:
-                                product.name || "",
-
-                            category:
-                                product.category || "General",
-
-                            price:
-                                Number(
-                                    product.price
-                                ) || 0,
-
-                            stock:
-                                Number(
-                                    product.stock
-                                ) || 0,
-
-                            image:
-                                product.image || ""
-
-                        }
-                    );
-
-                }
-
-                console.log(
-                    "Local products migrated to Firebase."
-                );
-
-            }
-
-        }
-
-
-        /*
-            LOAD AGAIN AFTER MIGRATION
-        */
-
-        const finalSnapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "products"
-                )
-            );
-
 
         products = [];
 
-        finalSnapshot.forEach(
-            productDoc => {
 
-                products.push({
+        snapshot.forEach(function(item){
 
-                    id: productDoc.id,
+            products.push({
 
-                    ...productDoc.data()
+                id:item.id,
 
-                });
+                ...item.data()
 
-            }
-        );
+            });
 
+        });
 
-        /*
-            KEEP LOCAL COPY FOR
-            CURRENT OLD PAGES.
-        */
 
         localStorage.setItem(
             "arqamProducts",
@@ -805,26 +688,22 @@ async function loadFirebaseProducts(){
 
         displayProducts();
 
-        updateDashboard();
-
 
         document.getElementById(
             "firebaseStatus"
-        ).innerText =
-            "🟢 Firebase connected — Products are stored in the cloud.";
+        ).textContent =
+            "🟢 Firebase connected — Products are stored in cloud.";
 
     }catch(error){
 
-        console.error(
-            "Firebase products error:",
-            error
-        );
+        console.error(error);
 
 
         document.getElementById(
             "firebaseStatus"
-        ).innerText =
-            "🔴 Firebase connection error. Check Firestore Rules and internet.";
+        ).textContent =
+            "🔴 Firebase error: " +
+            error.message;
 
     }
 
@@ -842,6 +721,7 @@ function displayProducts(){
             "productTable"
         );
 
+
     table.innerHTML = "";
 
 
@@ -849,17 +729,17 @@ function displayProducts(){
 
         table.innerHTML = `
 
-            <tr>
+        <tr>
 
-                <td
-                    colspan="6"
-                    style="text-align:center;padding:30px;">
+        <td
+        colspan="6"
+        style="text-align:center;padding:30px;">
 
-                    No products available.
+        No products available.
 
-                </td>
+        </td>
 
-            </tr>
+        </tr>
 
         `;
 
@@ -868,107 +748,143 @@ function displayProducts(){
     }
 
 
-    products.forEach(
-        (product,index) => {
+    products.forEach(function(product,index){
 
-            const stock =
-                Number(product.stock) || 0;
-
-
-            let stockClass =
-                "stock-good";
-
-            let stockText =
-                stock;
+        const stock =
+            Number(product.stock) || 0;
 
 
-            if(stock <= 0){
+        let stockClass =
+            "stock-good";
 
-                stockClass =
-                    "stock-out";
-
-                stockText =
-                    "Out of Stock";
-
-            }
-            else if(stock <= 5){
-
-                stockClass =
-                    "stock-low";
-
-            }
+        let stockText =
+            stock;
 
 
-            const row =
-                document.createElement(
-                    "tr"
-                );
+        if(stock <= 0){
 
+            stockClass =
+                "stock-out";
 
-            row.innerHTML = `
-
-                <td>
-
-                    ${
-                        product.image
-                        ?
-                        `
-                        <img
-                            class="product-img"
-                            src="${product.image}"
-                            onerror="this.style.display='none'"
-                        >
-                        `
-                        :
-                        "—"
-                    }
-
-                </td>
-
-                <td>
-                    <strong>
-                        ${escapeHTML(product.name || "-")}
-                    </strong>
-                </td>
-
-                <td>
-                    ${escapeHTML(product.category || "-")}
-                </td>
-
-                <td>
-                    Rs.
-                    ${Number(
-                        product.price || 0
-                    ).toLocaleString()}
-                </td>
-
-                <td class="${stockClass}">
-                    ${stockText}
-                </td>
-
-                <td>
-
-                    <button
-                        class="edit"
-                        onclick="editProduct(${index})">
-                        Edit
-                    </button>
-
-                    <button
-                        class="delete"
-                        onclick="deleteProduct(${index})">
-                        Delete
-                    </button>
-
-                </td>
-
-            `;
-
-
-            table.appendChild(row);
+            stockText =
+                "Out of Stock";
 
         }
-    );
+
+        else if(stock <= 5){
+
+            stockClass =
+                "stock-low";
+
+        }
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+        <td>
+
+        ${
+            product.image
+            ?
+            `
+            <img
+            class="product-img"
+            src="${escapeHTML(product.image)}"
+            onerror="this.style.display='none'">
+            `
+            :
+            "—"
+        }
+
+        </td>
+
+        <td>
+        <strong>
+        ${escapeHTML(product.name || "-")}
+        </strong>
+        </td>
+
+        <td>
+        ${escapeHTML(product.category || "-")}
+        </td>
+
+        <td>
+        Rs.
+        ${Number(
+            product.price || 0
+        ).toLocaleString()}
+        </td>
+
+        <td class="${stockClass}">
+        ${stockText}
+        </td>
+
+        <td>
+
+        <button
+        class="edit"
+        data-index="${index}">
+        Edit
+        </button>
+
+        <button
+        class="delete"
+        data-index="${index}">
+        Delete
+        </button>
+
+        </td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+
+    document
+    .querySelectorAll(".edit")
+    .forEach(function(button){
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                editProduct(
+                    Number(
+                        button.dataset.index
+                    )
+                );
+
+            }
+        );
+
+    });
+
+
+    document
+    .querySelectorAll(".delete")
+    .forEach(function(button){
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                deleteProduct(
+                    Number(
+                        button.dataset.index
+                    )
+                );
+
+            }
+        );
+
+    });
 
 }
 
@@ -980,11 +896,11 @@ function displayProducts(){
 function escapeHTML(value){
 
     return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -993,7 +909,20 @@ function escapeHTML(value){
    SAVE PRODUCT
 ========================= */
 
-window.saveProduct = async function(){
+document
+.getElementById("saveButton")
+.addEventListener("click",async function(){
+
+    if(!managerReady){
+
+        alert(
+            "Manager authentication required."
+        );
+
+        return;
+
+    }
+
 
     const name =
         document
@@ -1043,13 +972,10 @@ window.saveProduct = async function(){
     }
 
 
-    if(
-        isNaN(price) ||
-        price < 0
-    ){
+    if(isNaN(price) || price < 0){
 
         alert(
-            "Please enter a valid selling price."
+            "Please enter a valid price."
         );
 
         return;
@@ -1057,13 +983,10 @@ window.saveProduct = async function(){
     }
 
 
-    if(
-        isNaN(stock) ||
-        stock < 0
-    ){
+    if(isNaN(stock) || stock < 0){
 
         alert(
-            "Please enter a valid stock quantity."
+            "Please enter valid stock."
         );
 
         return;
@@ -1073,13 +996,9 @@ window.saveProduct = async function(){
 
     try{
 
-        /*
-            EDIT EXISTING PRODUCT
-        */
-
         if(editIndex >= 0){
 
-            const oldProduct =
+            const product =
                 products[editIndex];
 
 
@@ -1087,7 +1006,7 @@ window.saveProduct = async function(){
                 doc(
                     db,
                     "products",
-                    String(oldProduct.id)
+                    String(product.id)
                 ),
                 {
 
@@ -1106,28 +1025,22 @@ window.saveProduct = async function(){
 
 
             alert(
-                "✅ Product updated in Firebase!"
+                "✅ Product updated!"
             );
 
         }
 
-        /*
-            ADD NEW PRODUCT
-        */
-
         else{
 
-            const newId =
-                String(
-                    Date.now()
-                );
+            const id =
+                String(Date.now());
 
 
             await setDoc(
                 doc(
                     db,
                     "products",
-                    newId
+                    id
                 ),
                 {
 
@@ -1146,7 +1059,7 @@ window.saveProduct = async function(){
 
 
             alert(
-                "✅ Product added to Firebase!"
+                "✅ Product added!"
             );
 
         }
@@ -1154,31 +1067,31 @@ window.saveProduct = async function(){
 
         clearForm();
 
-        await loadFirebaseProducts();
+        await loadProducts();
+
+        updateDashboard();
+
 
     }catch(error){
 
-        console.error(
-            "Save product error:",
-            error
-        );
+        console.error(error);
 
 
         alert(
             "❌ Product save failed.\n\n" +
-            "Please check Firebase Rules and internet connection."
+            error.message
         );
 
     }
 
-};
+});
 
 
 /* =========================
-   EDIT PRODUCT
+   EDIT
 ========================= */
 
-window.editProduct = function(index){
+function editProduct(index){
 
     const product =
         products[index];
@@ -1241,20 +1154,19 @@ window.editProduct = function(index){
         "hidden"
     );
 
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
-};
+}
 
 
 /* =========================
-   DELETE PRODUCT
+   DELETE
 ========================= */
 
-window.deleteProduct = async function(index){
+async function deleteProduct(index){
+
+    if(!managerReady){
+        return;
+    }
+
 
     const product =
         products[index];
@@ -1265,13 +1177,11 @@ window.deleteProduct = async function(index){
     }
 
 
-    const confirmed =
-        confirm(
-            `Delete "${product.name}" from Firebase?`
-        );
-
-
-    if(!confirmed){
+    if(
+        !confirm(
+            `Delete "${product.name}"?`
+        )
+    ){
         return;
     }
 
@@ -1288,38 +1198,38 @@ window.deleteProduct = async function(index){
 
 
         alert(
-            "✅ Product deleted from Firebase!"
+            "✅ Product deleted!"
         );
 
 
-        await loadFirebaseProducts();
+        await loadProducts();
+
+        updateDashboard();
+
 
     }catch(error){
 
-        console.error(
-            "Delete error:",
-            error
-        );
-
-
         alert(
-            "❌ Product delete failed."
+            "❌ Delete failed.\n\n" +
+            error.message
         );
 
     }
 
-};
+}
 
 
 /* =========================
-   CANCEL EDIT
+   CANCEL
 ========================= */
 
-window.cancelEdit = function(){
+document
+.getElementById("cancelButton")
+.addEventListener("click",function(){
 
     clearForm();
 
-};
+});
 
 
 /* =========================
@@ -1396,90 +1306,66 @@ function updateDashboard(){
 
 
     const pending =
-        orders.filter(
-            order => {
+        orders.filter(function(order){
 
-                const status =
-                    String(
-                        order.status || ""
-                    )
-                    .trim()
-                    .toLowerCase();
+            return String(
+                order.status || "Pending"
+            )
+            .toLowerCase()
+            === "pending";
 
-
-                return(
-                    status === "" ||
-                    status === "pending"
-                );
-
-            }
-        );
+        });
 
 
     const sales =
-        orders.filter(
-            order => {
+        orders.filter(function(order){
 
-                const status =
-                    String(
-                        order.status || ""
-                    )
-                    .trim()
-                    .toLowerCase();
+            const status =
+                String(
+                    order.status || ""
+                )
+                .toLowerCase();
 
 
-                return(
-                    status === "confirmed" ||
-                    status === "delivered"
-                );
+            return(
+                status === "confirmed" ||
+                status === "delivered"
+            );
 
-            }
-        );
+        });
 
 
     let totalSales = 0;
 
 
-    sales.forEach(
-        order => {
+    sales.forEach(function(order){
 
-            totalSales +=
-                Number(
-                    order.total
-                ) || 0;
+        totalSales +=
+            Number(order.total) || 0;
 
-        }
-    );
+    });
 
 
     let totalPurchases = 0;
 
 
-    purchases.forEach(
-        purchase => {
+    purchases.forEach(function(purchase){
 
-            totalPurchases +=
-                Number(
-                    purchase.cost
-                ) || 0;
+        totalPurchases +=
+            Number(purchase.cost) || 0;
 
-        }
-    );
+    });
 
 
     let currentStock = 0;
 
 
-    products.forEach(
-        product => {
+    products.forEach(function(product){
 
-            currentStock +=
-                Number(
-                    product.stock
-                ) || 0;
+        currentStock +=
+            Number(product.stock) || 0;
 
-        }
-    );
+    });
 
 
     const result =
@@ -1487,21 +1373,16 @@ function updateDashboard(){
         totalPurchases;
 
 
-    let profit = 0;
+    const profit =
+        result >= 0
+        ? result
+        : 0;
 
-    let loss = 0;
 
-
-    if(result >= 0){
-
-        profit = result;
-
-    }else{
-
-        loss =
-            Math.abs(result);
-
-    }
+    const loss =
+        result < 0
+        ? Math.abs(result)
+        : 0;
 
 
     document.getElementById(
@@ -1557,54 +1438,6 @@ function updateDashboard(){
 
 }
 
-
-/* =========================
-   START FIREBASE
-========================= */
-
-async function startApp(){
-
-    try{
-
-        const connected =
-            await startFirebase();
-
-
-        if(!connected){
-            return;
-        }
-
-
-        await loadFirebaseProducts();
-
-
-    }catch(error){
-
-        console.error(
-            "App startup error:",
-            error
-        );
-
-    }
-
-}
-
-
-startApp();
-
-
-/* =========================
-   REFRESH DASHBOARD
-========================= */
-
-setInterval(
-    function(){
-
-        updateDashboard();
-
-    },
-    2000
-);
 
 </script>
 
